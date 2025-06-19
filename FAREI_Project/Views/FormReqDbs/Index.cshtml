@@ -1,0 +1,99 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    var username = User.Identity.Name;
+    var Type = "default";
+
+    @if (username == null)
+    {
+        Type = "default";
+    }
+    else
+    {
+        foreach (var claim in User.Claims)
+        {
+            Console.WriteLine($"Type: {claim.Type}, Value: {claim.Value}");
+        }
+        @foreach (var User in Model.AllUsers)
+        {
+            if (username.Equals(User.UserName))
+            {
+                Type = User.Type;
+                break;
+            }
+        }
+    }
+}
+@if (Type.Equals("default"))
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>
+            <a asp-area="Identity" asp-page="/Account/Login">
+                Please login first.
+            </a>
+        </p>
+    </div>
+}else if (Type.Equals("User"))
+{
+    <h1>User</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    RequestDate
+                </th>
+
+                <th>
+                    ResponsibleOfficer
+                </th>
+
+                <th>
+                    EquipmentType
+                </th>
+                <th>
+                    ProblemDescription
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FormReqDb)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RequestDate)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EquipmentType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProblemDescription)
+
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}else if (Type.Equals("Supervisor"))
+{
+    <partial name="SupervisorForm"/>
+}

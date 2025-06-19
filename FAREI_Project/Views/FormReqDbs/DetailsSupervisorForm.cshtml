@@ -1,0 +1,72 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<div>
+    <h4>FormReqDb</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.RequestDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Site)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Site)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Department)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.EquipmentType)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.SerialNumber)
+        </dd>
+   
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.status)
+        </dd>
+    </dl>
+</div>
+<div>
+    <form asp-action="ChangeStatus" method="post">
+        <input type="hidden" name="id" value="@Model.FormReqDbs.Id" />
+        <input type="hidden" name="Accepted" value="In transit"></input>
+        <input type="submit" value="Accept" class="btn btn-primary" />
+    </form>
+    <a asp-action="Index">Back to List</a>
+</div>
