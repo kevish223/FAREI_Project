@@ -35,6 +35,15 @@ namespace FAREI_Project.Controllers
             };
             return View(model);
         }
+        public async Task<IActionResult> MyRequestForm()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j=>j.ResponsibleOfficer.Equals(User.Identity.Name)).ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
         public async Task<IActionResult> SupervisorForm()
         {
             var model = new RequestsViewModel

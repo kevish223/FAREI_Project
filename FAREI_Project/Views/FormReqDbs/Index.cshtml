@@ -95,5 +95,8 @@
     </table>
 }else if (Type.Equals("Supervisor"))
 {
-    <partial name="SupervisorForm"/>
+    <div class="text-center">
+        <h1 class="display-4">Welcome Supervisor @username</h1>
+        <p> <a asp-controller="FormReqDbs" asp-action="SupervisorForm">Click to go to the request page</a>.</p>
+    </div>
 }

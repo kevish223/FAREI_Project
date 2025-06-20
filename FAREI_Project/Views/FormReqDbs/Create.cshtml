@@ -14,11 +14,11 @@
       
         <div class="col-md-3">
             <label asp-for="FormReqDbs.Site">Site:</label>
-            <input asp-for="FormReqDbs.Site" class="form-control" />
+            <input asp-for="FormReqDbs.Site" class="form-control" required/>
         </div>
         <div class="col-md-3">
             <label asp-for="FormReqDbs.Department">Department:</label>
-            <select asp-for="FormReqDbs.Department" class="form-control">
+            <select asp-for="FormReqDbs.Department" class="form-control" required>
                 <option>-- Select Department --</option>
                 <option> IT Dept </option>
                 <option> Finance Dept </option>
@@ -28,16 +28,16 @@
         </div>
         <div class="col-md-3">
             <label asp-for="FormReqDbs.ResponsibleOfficer">Responsible Officer:</label>
-            <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control" />
+            <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control" required placeholder="Enter Name" oninvalid="this.setCustomValidity('Enter User Name Here')" />
         </div>
         <div class="col-md-3">
             <label asp-for="FormReqDbs.Supervisor">Supervisor:</label>
-            <input asp-for="FormReqDbs.Supervisor" class="form-control" />
+            <input asp-for="FormReqDbs.Supervisor" class="form-control" required />
         </div>
     </div>
     <div class="form-group mb-4">
         <label asp-for="FormReqDbs.ContactPhone">Contact Phone:</label>
-        <input asp-for="FormReqDbs.ContactPhone" class="form-control" />
+        <input asp-for="FormReqDbs.ContactPhone" class="form-control" maxlength="10" minlength="10" required />
     </div>
 
     <h4>Equipment Section</h4>
@@ -51,9 +51,9 @@
         </thead>
         <tbody>
             <tr>
-                <td><input asp-for="FormReqDbs.EquipmentType" class="form-control" /></td>
-                <td><input asp-for="FormReqDbs.SerialNumber" class="form-control" /></td>
-                <td><input asp-for="FormReqDbs.ProblemDescription" class="form-control" /></td>
+                <td><input asp-for="FormReqDbs.EquipmentType" class="form-control" required /></td>
+                <td><input asp-for="FormReqDbs.SerialNumber" class="form-control" required /></td>
+                <td><input asp-for="FormReqDbs.ProblemDescription" class="form-control" required /></td>
             </tr>
         </tbody>
     </table>
