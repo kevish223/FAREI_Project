@@ -1,52 +1,24 @@
 ﻿@using FAREI_Project.ViewModel
 @model RequestsViewModel
-
-
 <h1>Supervisor</h1>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                RequestDate
-            </th>
-         
-            <th>
-                ResponsibleOfficer
-            </th>
-           
-            <th>
-                EquipmentType
-            </th>
-
-            <th>
-                ProblemDescription
-            </th>
-       
+            <th>RequestDate</th>         
+            <th>Responsible Officer</th>          
+            <th>Equipment Type</th>
+            <th>ProblemDescription</th>       
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.FormReqDb) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestDate)
-            </td>
-           
-            <td>
-                @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
-            </td>
-           
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipmentType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProblemDescription)
-            </td>
-        
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="DetailsSupervisorForm" asp-route-id="@item.Id">Details</a>
-            </td>
+            <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>           
+            <td>@Html.DisplayFor(modelItem => item.ResponsibleOfficer)</td>           
+            <td>@Html.DisplayFor(modelItem => item.EquipmentType)</td>
+            <td>@Html.DisplayFor(modelItem => item.ProblemDescription)</td>        
+            <td><a asp-action="DetailsSupervisorForm" asp-route-id="@item.Id">Details</a></td>
         </tr>
 }
     </tbody>

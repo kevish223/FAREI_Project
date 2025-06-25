@@ -34,6 +34,9 @@ namespace FormRequest.Models
         public string Supervisor { get; set; }
         public String? status { get; set; }
 
-    
+        public static implicit operator List<object>(FormReqDb? v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

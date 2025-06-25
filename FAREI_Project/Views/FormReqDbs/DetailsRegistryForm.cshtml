@@ -1,0 +1,108 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<div>
+    <h4>FormReqDb</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.RequestDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Site)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Site)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Department)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.EquipmentType)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.SerialNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Supervisor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Supervisor)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.status)
+        </dd>
+    </dl>
+</div>
+<div>
+    <form asp-action="SubmitRegistry" method="post">
+        <input asp-for="Registry.FormReqDbId" value="@Model.FormReqDbs.Id" type="hidden"/>
+        <div class="row mb-2">
+            <div class="col">
+                <input asp-for="Registry.From"  class="form-control" placeholder="From" />
+            </div>
+            <div class="col">
+                <input asp-for="Registry.To"  class="form-control" placeholder="To" />
+            </div>
+           
+        </div>
+
+        <div class="row mb-2">
+            <div class="col">
+                <input asp-for="Registry.Remarks"  class="form-control" placeholder="Remarks" />
+            </div>
+            <div class="col form-check">
+                <input asp-for="Registry.IsValid" type="checkbox"  class="form-check-input" />
+                <label class="form-check-label">Valid</label>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col form-check">
+                <input asp-for="Registry.IsOnSite" type="checkbox"  class="form-check-input" />
+                <label class="form-check-label" >On Site</label>
+            </div>
+            <div class="col form-check">
+                <input asp-for="Registry.IsInTransit" type="checkbox"  class="form-check-input" />
+                <label class="form-check-label" >In Transit</label>
+            </div> 
+            <div class="col">
+                <button type="submit" class="btn btn-success btn-sm">Submit</button>
+            </div>
+        </div>
+    </form>
+    <a asp-action="Index">Back to List</a>
+</div>

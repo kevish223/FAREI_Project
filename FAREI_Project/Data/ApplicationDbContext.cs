@@ -18,5 +18,6 @@ namespace FAREI_Project.Data
         public DbSet<FAREI_Project.Models.Request> Request { get; set; } = default!;
         public DbSet<FormRequest.Models.FormReqDb> FormReqDb { get; set; } = default!;
         public DbSet<FormReqDb> FormReqDbs { get; set; } = default!;
+        public DbSet<Registry> Registries { get; set; } = default!;
     }
 }

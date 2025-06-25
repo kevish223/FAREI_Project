@@ -1,52 +1,52 @@
 ﻿@using FAREI_Project.ViewModel
 @model RequestsViewModel
 
-<h1>My request</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
             </th>
+       
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
             </th>
-           
+      
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FormReqDbs.status)
-            </th>
         
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.FormReqDb) {
+@foreach (var item in Model.FormReqDb) 
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.RequestDate)
             </td>
+     
             <td>
                 @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
             </td>
+         
             <td>
                 @Html.DisplayFor(modelItem => item.EquipmentType)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
             </td>
+           
             <td>
-                @Html.DisplayFor(modelItem => item.status) 
-            </td>
-            <td>
-              
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-               
+                
+                    <a asp-action="DetailsRegistryForm" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>
 }

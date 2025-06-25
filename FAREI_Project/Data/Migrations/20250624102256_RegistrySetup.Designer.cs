@@ -4,6 +4,7 @@ using FAREI_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FAREI_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250624102256_RegistrySetup")]
+    partial class RegistrySetup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +101,7 @@ namespace FAREI_Project.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegistryId"));
 
-                    b.Property<int?>("FormReqDbId")
+                    b.Property<int>("FormReqDbId")
                         .HasColumnType("int");
 
                     b.Property<string>("From")
@@ -113,7 +116,7 @@ namespace FAREI_Project.Data.Migrations
                     b.Property<bool>("IsValid")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("MovementDate")
+                    b.Property<DateTime>("MovementDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Remarks")
@@ -346,7 +349,9 @@ namespace FAREI_Project.Data.Migrations
                 {
                     b.HasOne("FormRequest.Models.FormReqDb", "FormReqDb")
                         .WithMany()
-                        .HasForeignKey("FormReqDbId");
+                        .HasForeignKey("FormReqDbId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("FormReqDb");
                 });

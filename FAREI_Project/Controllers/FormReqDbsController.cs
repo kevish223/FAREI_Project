@@ -1,16 +1,19 @@
 ﻿using FAREI_Project.Data;
 using FAREI_Project.Models;
+
 using FAREI_Project.ViewModel;
 using FormRequest.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
+using Registry = FAREI_Project.Models.Registry;
 
 namespace FAREI_Project.Controllers
 {
@@ -18,11 +21,13 @@ namespace FAREI_Project.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+       
 
         public FormReqDbsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+           
         }
 
         // GET: FormReqDbs
@@ -33,6 +38,12 @@ namespace FAREI_Project.Controllers
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var type=user.Type;
+            if (type.Equals("Supervisor"))
+            {
+                return RedirectToAction("SupervisorForm");
+            }
             return View(model);
         }
         public async Task<IActionResult> MyRequestForm()
@@ -49,6 +60,24 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)&&j.status==null).ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> RegistryForm()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> TechnicianForm()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -90,6 +119,30 @@ namespace FAREI_Project.Controllers
             var viewModel = new RequestsViewModel
             {
                 FormReqDbs = formReqDb,
+                AllUsers = AllUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+        public async Task<IActionResult> DetailsRegistryForm(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb
+                .FirstOrDefaultAsync(m => m.Id == id);
+            var AllUsers = _userManager.Users.ToList();
+            
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                Registry = new Registry(),
                 AllUsers = AllUsers
             };
             if (formReqDb == null)
@@ -195,14 +248,11 @@ namespace FAREI_Project.Controllers
         public async Task<IActionResult> ChangeStatus(int id, String Accepted)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
-
             if (formReqDb == null)
             {
                 return NotFound();
             }
-
             formReqDb.status = Accepted;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -218,8 +268,28 @@ namespace FAREI_Project.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(SupervisorForm));
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitRegistry( RequestsViewModel model)
+        {
+            try
+            {
+                var newform = model.Registry;
+                newform.MovementDate = DateTime.Now;
+                _context.Registries.Add(newform);
+                _context.SaveChanges();
+                Console.WriteLine("Registry saved successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DB error: " + ex.Message);
+            }
+
+            return RedirectToAction("RegistryForm");
+        }
+
         // GET: FormReqDbs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
