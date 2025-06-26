@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FAREI_Project.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace FormRequest.Models
 {
@@ -33,6 +34,7 @@ namespace FormRequest.Models
 
         public string Supervisor { get; set; }
         public String? status { get; set; }
+        public List<Registry> Registries { get; set; } = new List<Registry>();
 
         public static implicit operator List<object>(FormReqDb? v)
         {

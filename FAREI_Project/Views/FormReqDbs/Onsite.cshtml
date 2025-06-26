@@ -1,0 +1,45 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<h1>
+    Onsite
+</h1>
+<table class="table">
+    <thead>
+        <tr>
+     
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.MovementDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.Remarks)
+            </th>
+            <th>@Html.DisplayNameFor(model => model.FormReqDbs.Site)</th>
+            <th>@Html.DisplayNameFor(model => model.FormReqDbs.Department)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Registries) {
+        <tr>
+         
+            <td>
+                @Html.DisplayFor(modelItem => item.MovementDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FormReqDb.Site)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormReqDb.Department)
+            </td>
+            <td>
+                    <a asp-action="DetailsOnsiteForm" asp-route-id="@item.FormReqDbId">Details</a>
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,73 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.From)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.To)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.MovementDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.Remarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.IsValid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.IsOnSite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Registry.IsInTransit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Registries) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.From)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.To)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MovementDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remarks)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsValid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOnSite)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsInTransit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormReqDb.Department)
+            </td>
+            <td>
+               
+                <a asp-action="Details" asp-route-id="@item.RegistryId">Details</a> 
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -81,6 +81,10 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
+            [Required]
+           
+            public string Role { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -119,7 +123,6 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                   
                     _logger.LogInformation("User logged in.");
                     return RedirectToRoute(new { controller = "FormReqDbs", action = "Index" }); ;
                 }

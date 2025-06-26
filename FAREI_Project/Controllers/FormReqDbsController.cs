@@ -38,13 +38,21 @@ namespace FAREI_Project.Controllers
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var username = User.Identity.Name;
+            if (username==null)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(username);
             var type=user.Type;
             if (type.Equals("Supervisor"))
             {
                 return RedirectToAction("SupervisorForm");
+            }else if (type.Equals("Registry"))
+            {
+                return RedirectToAction("RegistryForm");
             }
-            return View(model);
+                return View(model);
         }
         public async Task<IActionResult> MyRequestForm()
         {
@@ -68,7 +76,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j => j.status.Contains("Accepted") ).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -78,6 +86,25 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> Onsite()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Registries = await _context.Registries.Where(j=>j.IsOnSite).ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> Transite()
+        {
+            var model = new RequestsViewModel
+            {
+                Registries = await _context.Registries.Where(j => j.IsInTransit).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -143,6 +170,60 @@ namespace FAREI_Project.Controllers
             {
                 FormReqDbs = formReqDb,
                 Registry = new Registry(),
+                AllUsers = AllUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+        public async Task<IActionResult> DetailsOnsiteForm(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb
+               .FirstOrDefaultAsync(m => m.Id == id);
+            var Registry = await _context.Registries
+               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
+
+            var AllUsers = _userManager.Users.ToList();
+
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                Registry = Registry,
+                AllUsers = AllUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+        public async Task<IActionResult> DetailsTransiteForm(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb
+               .FirstOrDefaultAsync(m => m.Id == id);
+            var Registry = await _context.Registries
+               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
+
+            var AllUsers = _userManager.Users.ToList();
+
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                Registry = Registry,
                 AllUsers = AllUsers
             };
             if (formReqDb == null)
@@ -276,6 +357,21 @@ namespace FAREI_Project.Controllers
         {
             try
             {
+                var formReqDb = await _context.FormReqDb.FindAsync(model.Registry.FormReqDbId);
+                if (formReqDb == null)
+                {
+                 return NotFound();
+                }
+                bool isInTransit = model.Registry.IsInTransit;
+                if (isInTransit)
+                {
+                    formReqDb.status ="Transit";
+                }
+                else
+                {
+                    formReqDb.status = "Onsite";
+                }
+                await _context.SaveChangesAsync();
                 var newform = model.Registry;
                 newform.MovementDate = DateTime.Now;
                 _context.Registries.Add(newform);
