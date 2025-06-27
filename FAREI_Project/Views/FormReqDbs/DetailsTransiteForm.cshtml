@@ -1,60 +1,45 @@
-﻿@model FAREI_Project.Models.Registry
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
 
 <div>
     <h4>Registry</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.From)
+            @Html.DisplayNameFor(model => model.Registry.From)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.From)
+            @Html.DisplayFor(model => model.Registry.From)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.To)
+            @Html.DisplayNameFor(model => model.Registry.To)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.To)
+            @Html.DisplayFor(model => model.Registry.To)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MovementDate)
+            @Html.DisplayNameFor(model => model.Registry.MovementDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MovementDate)
+            @Html.DisplayFor(model => model.Registry.MovementDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Remarks)
+            @Html.DisplayNameFor(model => model.Registry.Remarks)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Remarks)
+            @Html.DisplayFor(model => model.Registry.Remarks)
         </dd>
+       
+       
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsValid)
+            @Html.DisplayNameFor(model => model.FormReqDbs.Department)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsValid)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsOnSite)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsOnSite)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsInTransit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsInTransit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDb)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDb.Department)
+            @Html.DisplayFor(model => model.FormReqDbs.Department)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.RegistryId">Edit</a> |
+    
     <a asp-action="Index">Back to List</a>
 </div>

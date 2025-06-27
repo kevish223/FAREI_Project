@@ -70,39 +70,65 @@
 <div>
     <form asp-action="SubmitRegistry" method="post">
         <input asp-for="Registry.FormReqDbId" value="@Model.FormReqDbs.Id" type="hidden"/>
-        <div class="row mb-2">
-            <div class="col">
-                <input asp-for="Registry.From"  class="form-control" placeholder="From" />
-            </div>
-            <div class="col">
-                <input asp-for="Registry.To"  class="form-control" placeholder="To" />
-            </div>
-           
+        <div>
+            <label asp-for="Registry.Remarks"></label>
+            <textarea asp-for="Registry.Remarks" class="form-control"></textarea>
+            <span asp-validation-for="Registry.Remarks" class="text-danger"></span>
+        </div>
+        <div>
+            <label>location</label>
+            <input asp-for="Registry.From" class="form-control" />
+        </div>
+        <div>
+            <input asp-for="Registry.IsOnSite" class="form-check-input" />
+            <label asp-for="Registry.IsOnSite" class="form-check-label"></label>
         </div>
 
-        <div class="row mb-2">
-            <div class="col">
-                <input asp-for="Registry.Remarks"  class="form-control" placeholder="Remarks" />
-            </div>
-            <div class="col form-check">
-                <input asp-for="Registry.IsValid" type="checkbox"  class="form-check-input" />
-                <label class="form-check-label">Valid</label>
-            </div>
-        </div>
 
-        <div class="row mb-2">
-            <div class="col form-check">
-                <input asp-for="Registry.IsOnSite" type="checkbox"  class="form-check-input" />
-                <label class="form-check-label" >On Site</label>
-            </div>
-            <div class="col form-check">
-                <input asp-for="Registry.IsInTransit" type="checkbox"  class="form-check-input" />
-                <label class="form-check-label" >In Transit</label>
-            </div> 
-            <div class="col">
-                <button type="submit" class="btn btn-success btn-sm">Submit</button>
-            </div>
+        <div>
+            <input asp-for="Registry.IsInTransit" class="form-check-input" id="IsInTransit" />
+            <label asp-for="Registry.IsInTransit" class="form-check-label"></label>
         </div>
+       
+
+<div id="transitFields" style="display:none;">
+  
+
+    <div>
+        <label asp-for="Registry.From"></label>
+        <input asp-for="Registry.From" class="form-control" />
+
+    </div>
+
+    <div>
+        <label asp-for="Registry.To"></label>
+        <input asp-for="Registry.To" class="form-control" />
+
+    </div>
+</div>
+
+
+
+<button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
     <a asp-action="Index">Back to List</a>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function toggleTransitFields() {
+            const checkbox = document.getElementById("IsInTransit");
+            const fields = document.getElementById("transitFields");
+            fields.style.display = checkbox.checked ? "block" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            toggleTransitFields(); // Show/hide on load
+            document.getElementById("IsInTransit").addEventListener("change", toggleTransitFields);
+        });
+    </script>
+
+
+}

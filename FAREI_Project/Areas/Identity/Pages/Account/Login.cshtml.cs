@@ -81,9 +81,7 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [Required]
-           
-            public string Role { get; set; }
+         
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

@@ -130,7 +130,12 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             {
                 new SelectListItem { Value = "St Pierre", Text = "St Pierre" },
                 new SelectListItem { Value = "Reduit", Text = "Reduit" },
-                new SelectListItem { Value = "Curepipe", Text = "Curepipe" }
+                new SelectListItem { Value = "Curepipe", Text = "Curepipe" },                 
+                new SelectListItem { Value = "Mapou", Text = "Mapou" },
+                new SelectListItem { Value = "Flacq", Text = "Flacq" },                
+                new SelectListItem { Value = "riviere des anguilles", Text = "riviere des anguilles" },                  
+                new SelectListItem { Value = "Plaisance", Text = "Plaisance" },
+                new SelectListItem { Value = "Vacoas", Text = "Vacoas" },
             };
         }
 
@@ -147,7 +152,12 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             {
                 new SelectListItem { Value = "St Pierre", Text = "St Pierre" },
                 new SelectListItem { Value = "Reduit", Text = "Reduit" },
-                new SelectListItem { Value = "Curepipe", Text = "Curepipe" }
+                new SelectListItem { Value = "Curepipe", Text = "Curepipe" },                                
+                new SelectListItem { Value = "Mapou", Text = "Mapou" },
+                new SelectListItem { Value = "Flacq", Text = "Flacq" },
+                new SelectListItem { Value = "riviere des anguilles", Text = "riviere des anguilles" },
+                new SelectListItem { Value = "Plaisance", Text = "Plaisance" },
+                new SelectListItem { Value = "Vacoas", Text = "Vacoas" },
             };
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)

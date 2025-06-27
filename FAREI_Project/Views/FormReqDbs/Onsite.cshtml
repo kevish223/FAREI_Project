@@ -7,39 +7,41 @@
 <table class="table">
     <thead>
         <tr>
-     
-            <th>
-                @Html.DisplayNameFor(model => model.Registry.MovementDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Registry.Remarks)
-            </th>
             <th>@Html.DisplayNameFor(model => model.FormReqDbs.Site)</th>
             <th>@Html.DisplayNameFor(model => model.FormReqDbs.Department)</th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)</th>
+            <th>@Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)</th>
+            <th>@Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)</th>
+            <th>@Html.DisplayNameFor(model => model.Registry.Remarks)</th>
+    
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Registries) {
-        <tr>
-         
-            <td>
-                @Html.DisplayFor(modelItem => item.MovementDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Remarks)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FormReqDb.Site)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FormReqDb.Department)
-            </td>
-            <td>
-                    <a asp-action="DetailsOnsiteForm" asp-route-id="@item.FormReqDbId">Details</a>
-
-            </td>
-        </tr>
+    <tr> 
+        <td>
+            @Html.DisplayFor(modelItem => item.FormReqDb.Site)  
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FormReqDb.Department)    
+        </td>    
+        <td>
+            @Html.DisplayFor(modelItem => item.FormReqDb.ResponsibleOfficer)
+        </td>       
+        <td>       
+            @Html.DisplayFor(modelItem => item.FormReqDb.EquipmentType)            
+        </td>        
+        <td>        
+            @Html.DisplayFor(modelItem => item.FormReqDb.SerialNumber)            
+        </td>        
+        <td>        
+            @Html.DisplayFor(modelItem => item.FormReqDb.ProblemDescription)            
+        </td>        
+        <td>        
+            @Html.DisplayFor(modelItem => item.Remarks)            
+        </td>
+    </tr>
 }
     </tbody>
 </table>

@@ -74,9 +74,16 @@ namespace FAREI_Project.Controllers
         }
         public async Task<IActionResult> RegistryForm()
         {
+            var username = User.Identity.Name;
+            if (username == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = await _userManager.FindByEmailAsync(username);
+            var Site = user.Site;
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j => j.status.Contains("Accepted") ).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j => j.status.Contains("Accepted") && j.Site.Contains(Site) ).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -86,25 +93,41 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Registries = await _context.Registries.Where(j => j.IsOnSite || j.IsInTransit).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
         }
         public async Task<IActionResult> Onsite()
         {
+            var username = User.Identity.Name;
+            if (username == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = await _userManager.FindByEmailAsync(username);
+            var Site = user.Site;
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
-                Registries = await _context.Registries.Where(j=>j.IsOnSite).ToListAsync(),
+                Registries = await _context.Registries.Where(j=>j.IsOnSite &&  j.From.Contains(Site)).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
         }
         public async Task<IActionResult> Transite()
         {
+            var username = User.Identity.Name;
+            if (username == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = await _userManager.FindByEmailAsync(username);
+            var Site = user.Site;
             var model = new RequestsViewModel
             {
-                Registries = await _context.Registries.Where(j => j.IsInTransit).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Registries = await _context.Registries.Where(j => j.IsInTransit &&(j.To.Contains(Site) || j.From.Contains(Site))).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
