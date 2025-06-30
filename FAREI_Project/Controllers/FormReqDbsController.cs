@@ -52,7 +52,11 @@ namespace FAREI_Project.Controllers
             {
                 return RedirectToAction("RegistryForm");
             }
-                return View(model);
+            else if (type.Equals("Technician"))
+            {
+                return RedirectToAction("TechnicianForm");
+            }
+            return View(model);
         }
         public async Task<IActionResult> MyRequestForm()
         {
@@ -92,8 +96,8 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.ToListAsync(),
-                Registries = await _context.Registries.Where(j => j.IsOnSite || j.IsInTransit).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j=> j.status.Contains("Transit") || j.status.Contains("Onsite")).ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -135,6 +139,28 @@ namespace FAREI_Project.Controllers
 
         // GET: FormReqDbs/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDbs?
+                .FirstOrDefaultAsync(m => m.Id == id);
+            var allUsers = _context.Users.ToList();
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                AllUsers = allUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+        public async Task<IActionResult> TechnicianDetailsForm(int? id)
         {
             if (id == null)
             {
@@ -373,6 +399,61 @@ namespace FAREI_Project.Controllers
                 }
             }
             return RedirectToAction(nameof(SupervisorForm));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeRemarks(int id, String Status,String Remarks)
+        {
+            var formReqDb = await _context.FormReqDb.FindAsync(id);
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+            formReqDb.status = Status;
+            formReqDb.remarks = Remarks;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FormReqDbExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("TechnicianForm");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Arrived(int id)
+        {
+            var Registry = await _context.Registries.FindAsync(id);
+            if (Registry == null)
+            {
+                return NotFound();
+            }
+            Registry.IsValid = true;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FormReqDbExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("RegistryForm");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

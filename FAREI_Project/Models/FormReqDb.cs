@@ -34,6 +34,7 @@ namespace FormRequest.Models
 
         public string Supervisor { get; set; }
         public String? status { get; set; }
+        public String? remarks { get; set; }
         public List<Registry> Registries { get; set; } = new List<Registry>();
 
         public static implicit operator List<object>(FormReqDb? v)
