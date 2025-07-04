@@ -76,10 +76,6 @@
             <span asp-validation-for="Registry.Remarks" class="text-danger"></span>
         </div>
         <div>
-            <label>location</label>
-            <input asp-for="Registry.From" class="form-control" />
-        </div>
-        <div>
             <input asp-for="Registry.IsOnSite" class="form-check-input" />
             <label asp-for="Registry.IsOnSite" class="form-check-label"></label>
         </div>
@@ -91,19 +87,13 @@
        
 
 <div id="transitFields" style="display:none;">
-  
 
-    <div>
-        <label asp-for="Registry.From"></label>
-        <input asp-for="Registry.From" class="form-control" />
+            <div>
+                <label>location</label>
+                <input asp-for="Registry.From" class="form-control" />
+            </div>
 
-    </div>
-
-    <div>
-        <label asp-for="Registry.To"></label>
-        <input asp-for="Registry.To" class="form-control" />
-
-    </div>
+            <input asp-for="Registry.From" type="hidden" value=""></input>
 </div>
 
 

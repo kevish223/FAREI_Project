@@ -4,6 +4,7 @@ using FAREI_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FAREI_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702174459_pls")]
+    partial class pls
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,9 +116,6 @@ namespace FAREI_Project.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -191,39 +191,6 @@ namespace FAREI_Project.Data.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Request");
-                });
-
-            modelBuilder.Entity("FAREI_Project.Models.Third_Party", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("CompanyNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FormReqDbID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("companyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("serialNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FormReqDbID");
-
-                    b.ToTable("Third_Parties");
                 });
 
             modelBuilder.Entity("FormRequest.Models.FormReqDb", b =>
@@ -422,15 +389,6 @@ namespace FAREI_Project.Data.Migrations
                     b.HasOne("FormRequest.Models.FormReqDb", "FormReqDb")
                         .WithMany("Registries")
                         .HasForeignKey("FormReqDbId");
-
-                    b.Navigation("FormReqDb");
-                });
-
-            modelBuilder.Entity("FAREI_Project.Models.Third_Party", b =>
-                {
-                    b.HasOne("FormRequest.Models.FormReqDb", "FormReqDb")
-                        .WithMany()
-                        .HasForeignKey("FormReqDbID");
 
                     b.Navigation("FormReqDb");
                 });

@@ -20,5 +20,6 @@ namespace FAREI_Project.Data
         public DbSet<FormReqDb> FormReqDbs { get; set; } = default!;
         public DbSet<Registry> Registries { get; set; } = default!;
         public DbSet<EquipmentInventory> Equipment { get; set; } = default!;
+        public DbSet<Third_Party> Third_Parties { get; set; } = default!;
     }
 }

@@ -11,5 +11,7 @@ namespace FAREI_Project.ViewModel
         public List<Registry>? Registries { get; set; }
         public FormReqDb? FormReqDbs { get; set; }
         public Registry? Registry{ get; set; }
+        public EquipmentInventory? Inventory { get; set; }
+        public Third_Party? Third_Party { get; set; }
     }
 }

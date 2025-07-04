@@ -125,7 +125,9 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
                 new SelectListItem { Value = "User", Text = "User" },
                 new SelectListItem { Value = "Supervisor", Text = "Supervisor" },
                 new SelectListItem { Value = "Registry", Text = "Registry" },
-                new SelectListItem { Value = "Technician", Text = "Technician" }
+                new SelectListItem { Value = "Technician", Text = "Technician" },
+                new SelectListItem { Value = "ITO", Text = "ITO" },
+                new SelectListItem { Value = "Admin", Text = "Admin" }
             };
             Sites = new List<SelectListItem>
             {
@@ -148,7 +150,8 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
                 new SelectListItem { Value = "User", Text = "User" },
                 new SelectListItem { Value = "Supervisor", Text = "Supervisor" },
                 new SelectListItem { Value = "Registry", Text = "Registry" },
-                new SelectListItem { Value = "Technician", Text = "Technician" }
+                new SelectListItem { Value = "Technician", Text = "Technician" },
+                new SelectListItem { Value = "Admin", Text = "Admin" }
             };
             Sites = new List<SelectListItem>
             {

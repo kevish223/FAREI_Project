@@ -1,0 +1,78 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<h4>FormReqDb</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create1">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.RequestDate" class="control-label"></label>
+                <input asp-for="FormReqDbs.RequestDate" class="form-control" />
+                <span asp-validation-for="FormReqDbs.RequestDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.Site" class="control-label"></label>
+                <input asp-for="FormReqDbs.Site" class="form-control" />
+                <span asp-validation-for="FormReqDbs.Site" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.Department" class="control-label"></label>
+                <input asp-for="FormReqDbs.Department" class="form-control" />
+                <span asp-validation-for="FormReqDbs.Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.ResponsibleOfficer" class="control-label"></label>
+                <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control" />
+                <span asp-validation-for="FormReqDbs.ResponsibleOfficer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.ContactPhone" class="control-label"></label>
+                <input asp-for="FormReqDbs.ContactPhone" class="form-control" />
+                <span asp-validation-for="FormReqDbs.ContactPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.EquipmentType" class="control-label"></label>
+                <input asp-for="FormReqDbs.EquipmentType" class="form-control" />
+                <span asp-validation-for="FormReqDbs.EquipmentType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.ProblemDescription" class="control-label"></label>
+                <input asp-for="FormReqDbs.ProblemDescription" class="form-control" />
+                <span asp-validation-for="FormReqDbs.ProblemDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.SerialNumber" class="control-label"></label>
+                <input asp-for="FormReqDbs.SerialNumber" class="form-control" />
+                <span asp-validation-for="FormReqDbs.SerialNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.Supervisor" class="control-label"></label>
+                <input asp-for="FormReqDbs.Supervisor" class="form-control" />
+                <span asp-validation-for="FormReqDbs.Supervisor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.status" class="control-label"></label>
+                <input asp-for="FormReqDbs.status" class="form-control" />
+                <span asp-validation-for="FormReqDbs.status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormReqDbs.remarks" class="control-label"></label>
+                <input asp-for="FormReqDbs.remarks" class="form-control" />
+                <span asp-validation-for="FormReqDbs.remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

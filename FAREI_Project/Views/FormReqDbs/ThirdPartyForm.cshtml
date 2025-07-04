@@ -1,0 +1,129 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<div>
+    <h4>FormReqDb</h4>
+    <hr />
+    <dl class="row">
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Site)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Site)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Department)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.EquipmentType)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.SerialNumber)
+        </dd>
+
+    </dl>
+    <form asp-action="SubmitThirdPartyForm" method="post" enctype="multipart/form-data" >
+        @Html.AntiForgeryToken()
+        <input asp-for="Third_Party.FormReqDbID" type="hidden" value="@Model.FormReqDbs.Id" />
+        <input asp-for="Third_Party.serialNumber" type="hidden" value="@Model.FormReqDbs.SerialNumber"></input>
+
+        <div >
+            <input  type="radio" class="form-check-input" name="Status" value="approve" id="Status"><label class="form-check-label">approve</label>
+            <input type="radio" class="form-check-input" name="Status" value="rejects" id="Status"><label class="form-check-label">Reject</label>
+        </div>
+        <div id="transitFields" style="display:none;">
+            <div class="row mb-3">
+            <div class="col-md-3">
+            <input asp-for="Third_Party.companyName"  class="form-control" placeholder="Company Name"  />
+        </div>
+                <div class="col-md-3">
+            <input asp-for="Third_Party.CompanyNumber"  class="form-control" placeholder="Contact Number"
+                  />
+        </div>
+                <div class="col-md-3">
+            <input asp-for="Third_Party.RequestDate"  type="date" class="form-control"
+                   />
+        </div>
+        </div>
+            <div class="form-group mb-4">
+
+            <label  class="form-label">Remarks & Quotation</label>
+
+            <textarea asp-for="Third_Party.Remarks"  class="form-control pe-5" placeholder="Type a remark..."></textarea>
+
+            <!-- Paperclip icon -->
+            <!--  <label for="Attachment" class="position-absolute end-0 top-0 me-3 mt-4" style="cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="gray" class="bi bi-paperclip" viewBox="0 0 16 16">
+                    <path d="M6.354 5.5H9.5a.5.5 0 0 0 0-1H6.354a1.5 1.5 0 1 0 0 3h4.292a2.5 2.5 0 1 1 0 5H5a3.5 3.5 0 0 1 0-7h4.5a.5.5 0 0 0 0-1H5a4.5 4.5 0 0 0 0 9h5.646a3.5 3.5 0 1 0 0-7H6.354z" />
+                </svg>
+            </label>
+            -->
+
+            <!-- Hidden file input triggered by label -->
+           <!-- <input type="file" id="Attachment" name="Attachment" accept=".pdf,.jpg,.jpeg,.png" class="d-none" /> -->
+        </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success btn-sm">Submit</button>
+        </div>
+    </form>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    function toggleTransitFields() {
+        const radios = document.querySelectorAll('input[name="Status"]');
+        let selectedValue = "";
+        radios.forEach(radio => {
+            if (radio.checked) {
+                selectedValue = radio.value;
+            }
+        });
+
+        const fields = document.getElementById("transitFields");
+        if (selectedValue === "approve") {
+            fields.style.display = "block";
+        } else {
+            fields.style.display = "none";
+        }
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleTransitFields(); // Show/hide on initial load
+
+        const radios = document.querySelectorAll('input[name="Status"]');
+        radios.forEach(radio => {
+            radio.addEventListener("change", toggleTransitFields);
+        });
+    });
+</script>

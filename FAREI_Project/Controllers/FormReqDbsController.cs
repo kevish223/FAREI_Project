@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,14 @@ namespace FAREI_Project.Controllers
             {
                 return RedirectToAction("TechnicianForm");
             }
+            else if (type.Equals("Admin"))
+            {
+                return RedirectToAction("CreateEquipment");
+            }
+            else if (type.Equals("ITO"))
+            {
+                return RedirectToAction("ITOform");
+            }
             return View(model);
         }
         public async Task<IActionResult> MyRequestForm()
@@ -72,6 +81,33 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)&&j.status==null).ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> ITOform()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j=>j.status== "Repaired").ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> NewComponent()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j => j.status == "New Component").ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> ThirdParty()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j => j.status == "Third party").ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -282,6 +318,88 @@ namespace FAREI_Project.Controllers
 
             return View(viewModel);
         }
+        public async Task<IActionResult> NewComponentDetailsForm(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb
+               .FirstOrDefaultAsync(m => m.Id == id);
+            var Registry = await _context.Registries
+               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
+
+            var AllUsers = _userManager.Users.ToList();
+
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                Registry = Registry,
+                AllUsers = AllUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> repairedDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb
+               .FirstOrDefaultAsync(m => m.Id == id);
+            var Registry = await _context.Registries
+               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
+
+            var AllUsers = _userManager.Users.ToList();
+
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                Registry = Registry,
+                AllUsers = AllUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+        public async Task<IActionResult> ThirdPartyForm(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb
+               .FirstOrDefaultAsync(m => m.Id == id);
+            var Registry = await _context.Registries
+               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
+
+            var AllUsers = _userManager.Users.ToList();
+
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                Registry = Registry,
+                AllUsers = AllUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
 
         // GET: FormReqDbs/Create
         public IActionResult Create()
@@ -295,14 +413,11 @@ namespace FAREI_Project.Controllers
             };
             return View(viewModel);
         }
-
-        // POST: FormReqDbs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RequestsViewModel model)
+        public IActionResult Create(RequestsViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 // Example: create new FormReqDb object to save
@@ -310,11 +425,68 @@ namespace FAREI_Project.Controllers
 
                 // Optionally set extra fields:
                 newForm.RequestDate = DateTime.Now;
-               
+
                 _context.FormReqDbs.Add(newForm);
                 _context.SaveChanges();
 
                 return RedirectToAction("Index");
+            }
+            Console.WriteLine("ModelState is INVALID!");
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"ModelState Error for {state.Key}: {error.ErrorMessage}");
+                    }
+                }
+            }
+            // If invalid → reload page and pass Users list again
+            model.AllUsers = _context.Users.ToList();
+
+            return View(model);
+        }
+        public IActionResult CreateEquipment()
+        {
+            var users = _context.Users.ToList();
+
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = new FormReqDb(), // empty form for Create page
+                AllUsers = users
+            };
+            return View(viewModel);
+        }
+        // POST: FormReqDbs/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateEquipment(RequestsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"ModelState Error for {state.Key}: {error.ErrorMessage}");
+                    }
+                }
+            }
+                if (ModelState.IsValid)
+            {
+                // Example: create new FormReqDb object to save
+                var newForm = model.Inventory;
+
+                // Optionally set extra fields:
+               
+
+                _context.Equipment.Add(newForm);
+                _context.SaveChanges();
+
+                return RedirectToAction("CreateEquipment");
             }
 
             // If invalid → reload page and pass Users list again
@@ -322,6 +494,59 @@ namespace FAREI_Project.Controllers
 
             return View(model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitThirdPartyForm(RequestsViewModel model,String Status)
+        {
+            if (!ModelState.IsValid)
+            {
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"ModelState Error for {state.Key}: {error.ErrorMessage}");
+                    }
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                // Example: create new FormReqDb object to save
+                var newForm = model.Third_Party;
+                var request= await _context.FormReqDb.FindAsync(newForm.FormReqDbID);
+
+                // Optionally set extra fields:
+                if (Status== "approve")
+                {
+                    _context.Third_Parties.Add(newForm);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    request.status="Rejected";
+                    _context.SaveChanges();
+                }
+
+
+
+                    return RedirectToAction("ITOForm");
+            }
+
+            // If invalid → reload page and pass Users list again
+            model.AllUsers = _context.Users.ToList();
+
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetFormRequests(string site, string department, string type)
+        {
+            var records = await _context.Equipment.Where(f =>
+            f.Site == site &&
+            f.Department == department &&
+            f.EquipmentType == type).ToListAsync();
+
+            return Json(records);
+        }
+
 
         // GET: FormReqDbs/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -402,7 +627,7 @@ namespace FAREI_Project.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeRemarks(int id, String Status,String Remarks)
+        public async Task<IActionResult> ITOstatus(int id,String Status,String Remarks)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             if (formReqDb == null)
@@ -426,6 +651,37 @@ namespace FAREI_Project.Controllers
                     throw;
                 }
             }
+            return RedirectToAction("ITOForm");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeRemarks(int id, String Status,String Remarks)
+        {
+            var formReqDb = await _context.FormReqDb.FindAsync(id);
+            var Equipment = await _context.Equipment.FirstOrDefaultAsync(f => f.SerialNumber==formReqDb.SerialNumber);
+
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+            formReqDb.status = Status;
+            formReqDb.remarks = Remarks;
+            Equipment.Remarks = Remarks;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FormReqDbExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return RedirectToAction("TechnicianForm");
         }
         [HttpPost]
@@ -433,11 +689,13 @@ namespace FAREI_Project.Controllers
         public async Task<IActionResult> Arrived(int id)
         {
             var Registry = await _context.Registries.FindAsync(id);
+            var formReqDb =await _context.FormReqDb.FindAsync(Registry.FormReqDbId);
             if (Registry == null)
             {
                 return NotFound();
             }
             Registry.IsValid = true;
+            formReqDb.status = "Transit";
             try
             {
                 await _context.SaveChangesAsync();
@@ -467,11 +725,7 @@ namespace FAREI_Project.Controllers
                  return NotFound();
                 }
                 bool isInTransit = model.Registry.IsInTransit;
-                if (isInTransit)
-                {
-                    formReqDb.status ="Transit";
-                }
-                else
+                if (!isInTransit)
                 {
                     formReqDb.status = "Onsite";
                 }
@@ -489,6 +743,8 @@ namespace FAREI_Project.Controllers
 
             return RedirectToAction("RegistryForm");
         }
+
+
 
         // GET: FormReqDbs/Delete/5
         public async Task<IActionResult> Delete(int? id)

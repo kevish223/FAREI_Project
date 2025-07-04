@@ -9,7 +9,7 @@ namespace FormRequest.Models
         public int Id { get; set; }
 
         // General Form Details
-        [Required]
+
         [DataType(DataType.Date)]
         public DateTime RequestDate { get; set; }
 
@@ -22,7 +22,7 @@ namespace FormRequest.Models
         [Required]
         public string ResponsibleOfficer { get; set; }
 
-        [Phone]
+
         public string ContactPhone { get; set; }
 
         // Equipment Section (1 entry for now — add related tables later if needed)

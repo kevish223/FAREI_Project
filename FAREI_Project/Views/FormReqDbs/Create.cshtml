@@ -1,4 +1,4 @@
-﻿@using FAREI_Project.ViewModel
+﻿﻿@using FAREI_Project.ViewModel
 @model RequestsViewModel
 
 @{
@@ -6,44 +6,45 @@
 }
 
 <h2>Repair/Servicing Request Form</h2>
-<hr />
 
-<form asp-action="Create">
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
     <h4>Request Details</h4>
     <div class="row mb-3">
-      
+
         <div class="col-md-3">
-            <label asp-for="FormReqDbs.Site">Site:</label>
-            <select asp-for="FormReqDbs.Site" class="form-control" required>
-                <option>-- Select site --</option>
+            <label >Site:</label>
+            <select asp-for="FormReqDbs.Site" class="form-control" id="Site" >
+                <option value="">-- Select site --</option>
                 <option> St Pierre </option>
                 <option> Reduit </option>
                 <option>Curepipe</option>
                 <option>Mapou</option>
                 <option>Flacq</option>
-                <option>riviere des anguilles</option> 
+                <option>riviere des anguilles</option>
                 <option>Plaisance</option>
                 <option>Vacoas</option>
             </select>
         </div>
         <div class="col-md-3">
-            <label asp-for="FormReqDbs.Department">Department:</label>
-            <select asp-for="FormReqDbs.Department" class="form-control" required>
-                <option>-- Select Department --</option>
+            <label >Department:</label>
+            <select asp-for="FormReqDbs.Department" class="form-control" id="Department">
+                <option value="">-- Select Department --</option>
                 <option> IT Dept </option>
                 <option> Finance Dept </option>
                 <option>HR Dept </option>
-                
+
             </select>
         </div>
         <div class="col-md-3">
             <label asp-for="FormReqDbs.ResponsibleOfficer">Responsible Officer:</label>
-            <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control" required placeholder="Enter Name" oninvalid="this.setCustomValidity('Enter User Name Here')" />
+            <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control"   />
         </div>
         <div class="col-md-3">
-            <label asp-for="FormReqDbs.Supervisor">Supervisor:</label>
-            <select asp-for="FormReqDbs.Supervisor" class="form-control" required >
-                <option>-- Select Supervisor --</option>
+            <label >Supervisor:</label>
+            <select asp-for="FormReqDbs.Supervisor" class="form-control" >
+                <option value="">-- Select Supervisor --</option>
                 <option> KEVISH1@gmail.com </option>
                 <option> Ajesh </option>
             </select>
@@ -51,7 +52,7 @@
     </div>
     <div class="form-group mb-4">
         <label asp-for="FormReqDbs.ContactPhone">Contact Phone:</label>
-        <input asp-for="FormReqDbs.ContactPhone" class="form-control" maxlength="8" minlength="5" required />
+        <input asp-for="FormReqDbs.ContactPhone" class="form-control" maxlength="8" minlength="5"  />
     </div>
 
     <h4>Equipment Section</h4>
@@ -65,8 +66,9 @@
         </thead>
         <tbody>
             <tr>
-                <td><select asp-for="FormReqDbs.EquipmentType" class="form-control" required>
-                        <option>-- Select Equipment --</option>
+                <td>
+                    <select asp-for="FormReqDbs.EquipmentType" class="form-control" id="Type" >
+                        <option value="">-- Select Equipment --</option>
                         <option> CPU </option>
                         <option> Monitor </option>
                         <option>Mouse</option>
@@ -75,22 +77,20 @@
                         <option>Scanner</option>
                     </select>
                 </td>
-                <td><select asp-for="FormReqDbs.SerialNumber"  class="form-control" required >
-                        <option>-- Select Serial number --</option>
-                        <option>EWQ13R</option>
-                        <option>VF23R1</option>
-                        <option>RAV332</option>
-                        <option>BN21E3</option>
+                <td>
+                    <select asp-for="FormReqDbs.SerialNumber" class="form-control" id="SerialNumber" >
+
                     </select>
-                    </select></td>
-                <td><input asp-for="FormReqDbs.ProblemDescription" class="form-control" required /></td>
+                    </select>
+                </td>
+                <td><input asp-for="FormReqDbs.ProblemDescription" class="form-control"  /></td>
             </tr>
         </tbody>
     </table>
-    
 
 
-    
+
+
 
     <div class="form-group">
         <input type="submit" value="Submit" class="btn btn-primary" />
@@ -103,3 +103,48 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<script>
+    const Site = document.getElementById("Site");
+    const Department = document.getElementById("Department");
+    const Type = document.getElementById("Type");
+    const SerialNumber = document.getElementById("SerialNumber");
+
+    let SiteVariable = null;
+    let DepartmentVariable = null;
+    let TypeVariable = null;
+
+    Site.addEventListener('change', async function () {
+        SiteVariable = Site.value;
+        await tryFetchData();
+    });
+
+    Department.addEventListener('change', async function () {
+        DepartmentVariable = Department.value;
+        await tryFetchData();
+    });
+
+    Type.addEventListener('change', async function () {
+        TypeVariable = Type.value;
+        await tryFetchData();
+    });
+
+    async function tryFetchData() {
+        if (SiteVariable && DepartmentVariable && TypeVariable) {
+            try {
+                const response = await fetch('/FormReqDbs/GetFormRequests?' +
+                    `site=${encodeURIComponent(SiteVariable)}` +
+                    `&department=${encodeURIComponent(DepartmentVariable)}` +
+                    `&type=${encodeURIComponent(TypeVariable)}`);
+                if (!response.ok) throw new Error("Server error");
+                const data = await response.json();
+
+                SerialNumber.innerHTML = "";
+                data.forEach(item => {
+                    SerialNumber.innerHTML += `<option>${item.serialNumber}</option>`;
+                });
+            } catch (err) {
+                console.error("Error loading data", err);
+            }
+        }
+    }
+</script>
