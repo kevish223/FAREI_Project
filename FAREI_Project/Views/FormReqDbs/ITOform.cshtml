@@ -1,7 +1,11 @@
 ﻿@using FAREI_Project.ViewModel
 @model RequestsViewModel
+
+@{
+
+}
 <h1>ITO</h1>
-<table class="table">
+<table class="table" style="border: 1px solid black">
     <thead>
         <tr>
           
@@ -26,12 +30,44 @@
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
             </th>
+            <th>
+                @Html.DisplayNameFor(Model=>Model.FormReqDbs.status)
+            </th>
             <th></th>
 
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.FormReqDb) {
+        
+            var status = item.status?.Trim().ToLower();
+            string statusClass = "";
+
+            if (string.IsNullOrWhiteSpace(status))
+            {
+                statusClass = "table-pending";
+                
+            }
+            else if (status == "accepted")
+            {
+                statusClass = "table-accept";
+               
+            }
+            else if (status == "reject")
+            {
+                statusClass = "table-reject";
+               
+            }
+            else if (status == "transit")
+            {
+                statusClass = "table-transit";
+       
+            }
+            else
+            {
+                statusClass = "table-pending";
+               
+            }
         <tr>
 
             <td>
@@ -54,6 +90,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>   
+            <td class ="@statusClass">
+                @Html.DisplayFor(modelItem=>item.status)
             </td>
             <td>
                 <a asp-action="repairedDetail" asp-route-id="@item.Id">Details</a>

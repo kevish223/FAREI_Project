@@ -50,14 +50,15 @@
         </dd>
 
     </dl>
+    @if (Model.FormReqDbs.status == "Third party"){
     <form asp-action="SubmitThirdPartyForm" method="post" enctype="multipart/form-data" >
         @Html.AntiForgeryToken()
         <input asp-for="Third_Party.FormReqDbID" type="hidden" value="@Model.FormReqDbs.Id" />
         <input asp-for="Third_Party.serialNumber" type="hidden" value="@Model.FormReqDbs.SerialNumber"></input>
 
         <div >
-            <input  type="radio" class="form-check-input" name="Status" value="approve" id="Status"><label class="form-check-label">approve</label>
-            <input type="radio" class="form-check-input" name="Status" value="rejects" id="Status"><label class="form-check-label">Reject</label>
+            <input  type="radio" class="form-check-input" name="Status" value="approve" id="Status"><label class="form-check-label"> approve</label>
+            <input type="radio" class="form-check-input" name="Status" value="rejects" id="Status"><label class="form-check-label"> Reject</label>
         </div>
         <div id="transitFields" style="display:none;">
             <div class="row mb-3">
@@ -94,7 +95,20 @@
         <div>
             <button type="submit" class="btn btn-success btn-sm">Submit</button>
         </div>
-    </form>
+        </form>
+    }
+    else
+    {
+        <form asp-action="SubmitThirdPartyForm" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input asp-for="Third_Party.FormReqDbID" type="hidden" value="@Model.FormReqDbs.Id" />
+            <label class="form-label">Remarks & Quotation</label>
+
+            <textarea  class="form-control pe-5" placeholder="Type a remark..." id="remarks"></textarea>
+            <button type="submit" class="btn btn-success btn-sm">Submit</button>
+        </form>
+        
+    }
 </div>
 <div>
     <a asp-action="Index">Back to List</a>

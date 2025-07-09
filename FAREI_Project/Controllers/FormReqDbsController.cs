@@ -59,7 +59,7 @@ namespace FAREI_Project.Controllers
             }
             else if (type.Equals("Admin"))
             {
-                return RedirectToAction("CreateEquipment");
+                return View(model);
             }
             else if (type.Equals("ITO"))
             {
@@ -89,7 +89,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j=>j.status== "Repaired").ToListAsync(),
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -98,7 +98,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j => j.status == "New Component").ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j => j.status =="New Component").ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -107,7 +107,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j => j.status == "Third party").ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j => j.status =="Third party" || j.status== "Sent to third party").ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -132,25 +132,28 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j=> j.status.Contains("Transit") || j.status.Contains("Onsite")).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
                 Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
         }
-        public async Task<IActionResult> Onsite()
+        public async Task<IActionResult> Movement()
         {
-            var username = User.Identity.Name;
-            if (username == null)
-            {
-                return RedirectToAction("Index");
-            }
-            var user = await _userManager.FindByEmailAsync(username);
-            var Site = user.Site;
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.ToListAsync(),
-                Registries = await _context.Registries.Where(j=>j.IsOnSite &&  j.From.Contains(Site)).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j=>j.status== "Accepted").ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> MovementConfirmation()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j => j.status == "Accepted").ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -167,7 +170,18 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
-                Registries = await _context.Registries.Where(j => j.IsInTransit &&(j.To.Contains(Site) || j.From.Contains(Site))).ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> Feedback()
+        {
+
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j=>j.status== "approve").ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -255,33 +269,6 @@ namespace FAREI_Project.Controllers
             {
                 FormReqDbs = formReqDb,
                 Registry = new Registry(),
-                AllUsers = AllUsers
-            };
-            if (formReqDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(viewModel);
-        }
-        public async Task<IActionResult> DetailsOnsiteForm(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var formReqDb = await _context.FormReqDb
-               .FirstOrDefaultAsync(m => m.Id == id);
-            var Registry = await _context.Registries
-               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
-
-            var AllUsers = _userManager.Users.ToList();
-
-            var viewModel = new RequestsViewModel
-            {
-                FormReqDbs = formReqDb,
-                Registry = Registry,
                 AllUsers = AllUsers
             };
             if (formReqDb == null)
@@ -400,6 +387,28 @@ namespace FAREI_Project.Controllers
 
             return View(viewModel);
         }
+        public async Task<IActionResult> MovementDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDbs?
+                .FirstOrDefaultAsync(m => m.Id == id);
+            var allUsers = _context.Users.ToList();
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                AllUsers = allUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
 
         // GET: FormReqDbs/Create
         public IActionResult Create()
@@ -431,7 +440,7 @@ namespace FAREI_Project.Controllers
 
                 return RedirectToAction("Index");
             }
-            Console.WriteLine("ModelState is INVALID!");
+
             if (!ModelState.IsValid)
             {
                 foreach (var state in ModelState)
@@ -496,28 +505,27 @@ namespace FAREI_Project.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitThirdPartyForm(RequestsViewModel model,String Status)
+        public async Task<IActionResult> SubmitThirdPartyForm(RequestsViewModel model,String? Status,String? remarks)
         {
-            if (!ModelState.IsValid)
-            {
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"ModelState Error for {state.Key}: {error.ErrorMessage}");
-                    }
-                }
-            }
+
             if (ModelState.IsValid)
             {
                 // Example: create new FormReqDb object to save
                 var newForm = model.Third_Party;
                 var request= await _context.FormReqDb.FindAsync(newForm.FormReqDbID);
+                if (request.status== "Sent to third party")
+                {
+                    request.remarks=remarks;
+                    request.status ="approve";
+                    _context.SaveChanges();
+                    return RedirectToAction("ITOForm");
+                }
 
                 // Optionally set extra fields:
                 if (Status== "approve")
                 {
                     _context.Third_Parties.Add(newForm);
+                    request.status ="Sent to third party";
                     _context.SaveChanges();
                 }
                 else
@@ -534,7 +542,7 @@ namespace FAREI_Project.Controllers
             // If invalid → reload page and pass Users list again
             model.AllUsers = _context.Users.ToList();
 
-            return View(model);
+            return RedirectToAction("ITOForm");
         }
         [HttpGet]
         public async Task<IActionResult> GetFormRequests(string site, string department, string type)
@@ -724,11 +732,7 @@ namespace FAREI_Project.Controllers
                 {
                  return NotFound();
                 }
-                bool isInTransit = model.Registry.IsInTransit;
-                if (!isInTransit)
-                {
-                    formReqDb.status = "Onsite";
-                }
+
                 await _context.SaveChangesAsync();
                 var newform = model.Registry;
                 newform.MovementDate = DateTime.Now;

@@ -2,15 +2,9 @@
 @model RequestsViewModel
 
 <div>
-    <h4>Component</h4>
+    <h4>Form details</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.RequestDate)
-        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FormReqDbs.Site)
         </dt>
@@ -53,26 +47,29 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FormReqDbs.SerialNumber)
         </dd>
-
-
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.Supervisor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.Supervisor)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FormReqDbs.status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FormReqDbs.status)
+        </dd>
     </dl>
-    <form asp-action="ITOstatus" method="post">
-        <input type="hidden" value="@Model.FormReqDbs.Id" name="id"></Input>
-        <div>
-            <label></label>
-            <textarea class="form-control" name="Remarks"></textarea>
-            <span class="text-danger"></span>
-        </div>
-   
-        <input type="radio" class="form-check-input" name="Status" value="approve">
-        <label>approve</label><br>
-        <input type="radio" class="form-check-input" name="Status" value="rejects">
-        <label>Reject</label><br>
-           
-        <input type="submit" value="Submit" class="btn btn-primary" />
-    </form>
 </div>
 <div>
+    <form asp-action="ChangeStatus" method="post">
+        <input type="hidden" name="id" value="@Model.FormReqDbs.Id"></input>
+        <input type="radio" class="form-check-input" name="Accepted" value="Onsite"><label class="form-check-label"> Onsite</label><br>
+        <input type="radio" class="form-check-input" name="Accepted" value="Onsite"><label class="form-check-label"> Transit</label><br>
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </form>
 
+</div>
+<div>
     <a asp-action="Index">Back to List</a>
 </div>

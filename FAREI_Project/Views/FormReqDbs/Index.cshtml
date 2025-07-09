@@ -33,7 +33,7 @@
             </a>
         </p>
     </div>
-}else if (Type.Equals("User"))
+}else
 {
     <h1>User</h1>
 
@@ -63,22 +63,4 @@
             }
         </tbody>
     </table>
-}else if (Type.Equals("Supervisor"))
-{
-    <div class="text-center">
-        <h1 class="display-4">Welcome Supervisor @username</h1>
-        <p> <a asp-controller="FormReqDbs" asp-action="SupervisorForm">Click to go to the request page</a>.</p>
-    </div>
-}else if (Type.Equals("Registry"))
-{
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p> <a asp-controller="FormReqDbs" asp-action="RegistryForm">Click to go to the registry page</a>.</p>
-    </div>
-}else if (Type.Equals("Technician"))
-{
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p> <a asp-controller="FormReqDbs" asp-action="RegistryForm">Click to go to the Technician page</a>.</p>
-    </div>
 }

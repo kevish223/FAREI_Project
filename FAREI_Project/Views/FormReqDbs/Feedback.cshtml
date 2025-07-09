@@ -1,0 +1,96 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+
+<h1>Feedback</h1>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.Site)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.remarks)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.FormReqDb) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Site)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipmentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProblemDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.remarks)
+            </td>
+            <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="toggleFeedbackForm(@item.Id)">➕ Add</button>
+
+            </td>
+        </tr>
+            <tr id="feedback-form-@item.Id" style="display: none;">
+                <!--Hidden row shown only when button is clicked-->
+                <td colspan="7">
+                    <form asp-action="SubmitFeedback" method="post" class="row g-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.Id" />
+
+                        <div class="col-md-8">
+                            <textarea name="feedback" class="form-control" placeholder="Enter feedback..."></textarea>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input type="checkbox" name="confirmRepaired" value="true" class="form-check-input" />
+                                <label class="form-check-label">Confirm Repair</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 text-end">
+                            <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+}
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+        function toggleFeedbackForm(id) {  //hides and shows form when clicked
+            const formRow = document.getElementById("feedback-form-" + id);
+            formRow.style.display = (formRow.style.display === "none") ? "table-row" : "none";
+        }
+    </script>
+}

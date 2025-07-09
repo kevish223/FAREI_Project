@@ -4,9 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FAREI_Project</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FAREI_Project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/ITO.css" />
 </head>
 @{
             var username = User.Identity.Name;
@@ -89,6 +88,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="MyRequestForm"> My request</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="Feedback"> Feedback</a>
+                            </li>
                         </ul>
                         <partial name="_LoginPartial" />
                     </div>
@@ -138,6 +140,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="Index">Request</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="Movement">Movement request</a>
+                            </li>
                           
                         </ul>
                         <partial name="_LoginPartial" />
@@ -159,9 +164,17 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="Index">Request</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="Index">Requests</a>
                             </li>
-
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="UserForm">Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="RegistryForm">Registry</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="Index">equipment</a>
+                            </li>
                         </ul>
                         <partial name="_LoginPartial" />
                     </div>
@@ -185,10 +198,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="ITOform">Repaired</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="NewComponent">New component</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="ThirdParty">Third party</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="MovementConfirmation">Movement details</a>
                             </li>
                         </ul>
                         <partial name="_LoginPartial" />
@@ -204,11 +214,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - FAREI_Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+ 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
