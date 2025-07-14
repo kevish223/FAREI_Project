@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using Mono.TextTemplating;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace FAREI_Project.Controllers
             var Site = user.Site;
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j => j.status.Contains("Accepted") && j.Site.Contains(Site) ).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j => (j.status.Contains("Transitting") || j.status.Contains("Send back") || j.status.Contains("Complete")) && j.Site.Contains(Site) ).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -169,8 +170,9 @@ namespace FAREI_Project.Controllers
             var Site = user.Site;
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.ToListAsync(),
-                Registries = await _context.Registries.ToListAsync(),
+             
+                FormReqDb=await _context.FormReqDb.ToListAsync(),
+                Registries = await _context.Registries.Where(j=>j.From==Site || j.To==Site).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -615,22 +617,33 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
-            formReqDb.status = Accepted;
-            try
+            if (Accepted== "Transit")
             {
-                await _context.SaveChangesAsync();
+                formReqDb.status = "Transit request";
             }
-            catch (DbUpdateConcurrencyException)
+            else if (Accepted == "Onsite")
             {
-                if (!FormReqDbExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                formReqDb.status = "Onsite request";
+            }else
+            {
+                formReqDb.status = Accepted;
             }
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!FormReqDbExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             return RedirectToAction(nameof(SupervisorForm));
         }
         [HttpPost]
@@ -638,12 +651,35 @@ namespace FAREI_Project.Controllers
         public async Task<IActionResult> ITOstatus(int id,String Status,String Remarks)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
+            var registry =  _context.Registries.Any(k => k.FormReqDbId == id);
             if (formReqDb == null)
             {
                 return NotFound();
             }
-            formReqDb.status = Status;
-            formReqDb.remarks = Remarks;
+            if (Status== "rejects")
+            {
+                if (registry) {
+                    formReqDb.status = "Send back";
+                    formReqDb.remarks = Remarks;
+                }
+                else {
+                    formReqDb.status = Status;
+                    formReqDb.remarks = Remarks;
+                }
+            } else if (formReqDb.status == "Transit request")
+            {
+                formReqDb.status = "Transitting";
+                formReqDb.remarks = Remarks ;
+            }else if(formReqDb.status == "Pending request")
+            {
+                formReqDb.status = "Start repairing";
+                formReqDb.remarks = Remarks ;
+            }
+            else if (formReqDb.status == "Final request")
+            {
+                formReqDb.status = "Complete";
+                formReqDb.remarks = Remarks ;
+            }
             try
             {
                 await _context.SaveChangesAsync();
@@ -663,7 +699,7 @@ namespace FAREI_Project.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeRemarks(int id, String Status,String Remarks)
+        public async Task<IActionResult> Report(int id, String Status,String Remarks)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             var Equipment = await _context.Equipment.FirstOrDefaultAsync(f => f.SerialNumber==formReqDb.SerialNumber);
@@ -672,9 +708,18 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
-            formReqDb.status = Status;
-            formReqDb.remarks = Remarks;
-            Equipment.Remarks = Remarks;
+            if (formReqDb.status == "Start repairing")
+            {
+                formReqDb.status = "Final request";
+                formReqDb.remarks = Remarks;
+                Equipment.Remarks += " " + Remarks;
+            }
+            else {
+                formReqDb.status = "Pending request";
+                formReqDb.remarks = Remarks;
+                Equipment.Remarks += " " + Remarks;
+            }
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -698,12 +743,27 @@ namespace FAREI_Project.Controllers
         {
             var Registry = await _context.Registries.FindAsync(id);
             var formReqDb =await _context.FormReqDb.FindAsync(Registry.FormReqDbId);
+            var checkRegistry = _context.Registries.Any(j=>j.FormReqDbId==formReqDb.Id);
             if (Registry == null)
             {
                 return NotFound();
             }
-            Registry.IsValid = true;
-            formReqDb.status = "Transit";
+            if (checkRegistry) {
+                if (formReqDb.status=="Send back")
+                {
+                    formReqDb.status ="rejected";
+                }
+                else if(formReqDb.status== "Transitting")
+                {
+                    formReqDb.status = "Repairing";
+                    Registry.IsValid = true;
+                }
+            }
+            else
+            {
+                Registry.IsValid = true;
+                formReqDb.status = "Repairing";
+            }
             try
             {
                 await _context.SaveChangesAsync();
@@ -725,20 +785,35 @@ namespace FAREI_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitRegistry( RequestsViewModel model)
         {
+
             try
             {
-                var formReqDb = await _context.FormReqDb.FindAsync(model.Registry.FormReqDbId);
+                var formReqDb = await _context.FormReqDb.FindAsync(model.Registry?.FormReqDbId);
+                var existRegistry= _context.Registries.Any(k=>k.FormReqDbId==formReqDb.Id);
+                var newform = model.Registry;
                 if (formReqDb == null)
                 {
                  return NotFound();
                 }
 
                 await _context.SaveChangesAsync();
-                var newform = model.Registry;
-                newform.MovementDate = DateTime.Now;
-                _context.Registries.Add(newform);
-                _context.SaveChanges();
-                Console.WriteLine("Registry saved successfully");
+                if (existRegistry)
+                {
+                    newform.To= formReqDb.Site;
+                    newform.From = "Reduit";
+                    _context.Registries.Add(newform);
+                    _context.SaveChanges();
+                    return RedirectToAction("RegistryForm");
+                }
+                else
+                {
+                    newform.From = formReqDb.Site;
+                    newform.To = "Reduit";
+                    _context.Registries.Add(newform);
+                    _context.SaveChanges();
+                    return RedirectToAction("RegistryForm");
+                }
+               
             }
             catch (Exception ex)
             {

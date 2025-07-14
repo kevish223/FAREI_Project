@@ -57,25 +57,31 @@
     </dl>
 </div>
 <div>
-    <form asp-action="ChangeRemarks" method="post">
+    @if (Model.FormReqDbs.status == "Repairing" || Model.FormReqDbs.status == "Start repairing")
+    {
+        
+        <form asp-action="Report" method="post">
         <input asp-for="Registry.FormReqDbId" value="@Model.FormReqDbs.Id" name="id" type="hidden" />
         <div class="mb-3">
+            <input type="hidden" value="pending request"></input>
             <label asp-for="FormReqDbs.remarks"></label>
             <textarea asp-for="FormReqDbs.remarks" name="Remarks" class="form-control"></textarea>
             <span asp-validation-for="FormReqDbs.remarks" class="text-danger"></span>
-        </div> 
-
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </form>
+    }else if(Model.FormReqDbs.status == "Accepted") 
+    {
         <div class="mb-3">
-        <select asp-for="FormReqDbs.status" name="Status" class="form-control" id="statusSelect" required>
-            <option>-- Select status --</option>
-            <option>New Component</option>
-            <option>Third party</option>
-            <option>Repaired</option>    
-        </select>
+            <form asp-action="ChangeStatus" method="post">
+                <input type="hidden" name="id" value="@Model.FormReqDbs.Id"></input>
+                <input type="radio" class="form-check-input" name="Accepted" value="Onsite"><label class="form-check-label"> Onsite</label><br>
+                <input type="radio" class="form-check-input" name="Accepted" value="Transit"><label class="form-check-label"> Transit</label><br>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-    </form>
-    <a asp-action="Index">Back to List</a>
+    }  
 </div>
+<a asp-action="Index">Back to List</a>
 
 

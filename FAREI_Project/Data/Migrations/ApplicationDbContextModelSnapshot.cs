@@ -137,6 +137,9 @@ namespace FAREI_Project.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegistryId"));
 
+                    b.Property<string>("Driver")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("FormReqDbId")
                         .HasColumnType("int");
 
