@@ -33,13 +33,18 @@
     </dl>
 
     <form asp-action="Arrived" method="post">
+
             <input type="hidden" name="id" value="@Model.Registry.RegistryId" />
-            
+        <div>
+            <label>Remarks</label>
+            <textarea name="Remarks" class="form-control"></textarea>
+            <span class="text-danger"></span>
+        </div>
             <input type="submit" value="Arrived" class="btn btn-secondary" />
         </form>
   
 </div>
 <div>
     
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Transite">Back to List</a>
 </div>

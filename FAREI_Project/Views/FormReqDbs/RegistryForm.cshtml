@@ -7,19 +7,14 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
-            </th>
-       
+            </th>       
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
-            </th>
-      
-            <th>
-                @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
-            </th>
+            </th>      
+
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
-            </th>
-        
+            </th>        
             <th></th>
         </tr>
     </thead>
@@ -29,21 +24,16 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.RequestDate)
-            </td>
-     
+            </td>     
             <td>
                 @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
             </td>
          
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipmentType)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
-            </td>
-           
-            <td>
-                
+            </td>           
+            <td>                
                     <a asp-action="DetailsRegistryForm" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>

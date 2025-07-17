@@ -1,24 +1,4 @@
 ﻿﻿
-td.table-accept {
-    background-color: #59b5ff !important;
-    color: black;
-}
-
-td.table-reject {
-    background-color: #DC143C !important;
-    color: white;
-}
-
-td.table-pending {
-    background-color: #D3D3D3 !important;
-    color: black;
-}
-
-td.table-transit {
-    background-color: #F3E5AB !important;
-    color: black;
-}
-
 .page-title {
     color: #5E2B97;
     font-weight: 600;
@@ -27,7 +7,7 @@ td.table-transit {
 
 /* Table Header */
 .purple-table-header th {
-    background-color: #6A0DAD;
+    background-color: #5E2B97;
     color: white;
 }
 

@@ -2,7 +2,7 @@
 @model RequestsViewModel
 
 <div>
-    <h4>FormReqDb</h4>
+    <h4>Details</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -35,12 +35,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.EquipmentType)
-        </dd>
+
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
         </dt>
@@ -57,26 +52,42 @@
     </dl>
 </div>
 <div>
-    @if (Model.FormReqDbs.status == "Repairing" || Model.FormReqDbs.status == "Start repairing")
+    @if (Model.FormReqDbs.Pointer == 4 )
     {
-        
+
         <form asp-action="Report" method="post">
-        <input asp-for="Registry.FormReqDbId" value="@Model.FormReqDbs.Id" name="id" type="hidden" />
-        <div class="mb-3">
-            <input type="hidden" value="pending request"></input>
-            <label asp-for="FormReqDbs.remarks"></label>
-            <textarea asp-for="FormReqDbs.remarks" name="Remarks" class="form-control"></textarea>
-            <span asp-validation-for="FormReqDbs.remarks" class="text-danger"></span>
+            <input  value="@Model.FormReqDbs.Id" name="id" type="hidden" />               
+            <input  value="@Model.FormReqDbs.SerialNumber" name="SerialNumber" type="hidden" />
+            <div class="mb-3">
+                <input type="hidden" value="pending request"></input>
+                <label asp-for="ITTreport.Report"></label>
+                <textarea  name="Remarks" class="form-control"></textarea>
+                <span  class="text-danger"></span>
             </div>
             <input type="submit" value="Submit" class="btn btn-primary" />
         </form>
-    }else if(Model.FormReqDbs.status == "Accepted") 
+    }
+    else if (Model.FormReqDbs.Pointer == 5)
+    {
+        <form asp-action="Report" method="post">
+            <input value="@Model.FormReqDbs.Id" name="id" type="hidden" />
+      
+            <div class="mb-3">
+                <input type="hidden" value="pending request"></input>
+                <label ></label>
+                <textarea  name="Remarks" class="form-control"></textarea>
+                <span class="text-danger"></span>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </form>
+    }
+    else if(Model.FormReqDbs.Pointer == 1) 
     {
         <div class="mb-3">
             <form asp-action="ChangeStatus" method="post">
                 <input type="hidden" name="id" value="@Model.FormReqDbs.Id"></input>
-                <input type="radio" class="form-check-input" name="Accepted" value="Onsite"><label class="form-check-label"> Onsite</label><br>
-                <input type="radio" class="form-check-input" name="Accepted" value="Transit"><label class="form-check-label"> Transit</label><br>
+                <input type="radio" class="form-check-input" name="Status" value=3><label class="form-check-label"> Onsite</label><br>
+                <input type="radio" class="form-check-input" name="Status" value=4><label class="form-check-label"> Transit</label><br>
                 <input type="submit" value="Submit" class="btn btn-primary" />
             </form>
         </div>

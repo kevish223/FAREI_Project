@@ -22,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.Department)
             </th>
+            <th>
+                Arrived
+            </th>
 
             <th></th>
         </tr>
@@ -45,8 +48,12 @@
                 @Html.DisplayFor(modelItem => item.FormReqDb.Department)
             </td>
             <td>
+                    @Html.DisplayFor(modelItem => item.IsValid)
+            </td>
 
-                    <a asp-action="DetailsTransiteForm" asp-route-id="@item.FormReqDbId">Details</a>
+            <td>
+
+                    <a asp-action="DetailsTransiteForm" asp-route-id="@item.RegistryId">Details</a>
 
             </td>
         </tr>

@@ -12,9 +12,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.Department)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FormReqDbs.EquipmentType)
-            </th>
+/* */
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
             </th>
@@ -39,9 +37,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Department)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipmentType)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
             </td>
@@ -68,13 +64,6 @@
 
                         <div class="col-md-8">
                             <textarea name="feedback" class="form-control" placeholder="Enter feedback..."></textarea>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-check">
-                                <input type="checkbox" name="confirmRepaired" value="true" class="form-check-input" />
-                                <label class="form-check-label">Confirm Repair</label>
-                            </div>
                         </div>
 
                         <div class="col-md-2 text-end">
