@@ -52,7 +52,7 @@
     </dl>
 </div>
 <div>
-    @if (Model.FormReqDbs.Pointer == 4 )
+    @if (Model.FormReqDbs.Pointer == 3 )
     {
 
         <form asp-action="Report" method="post">
@@ -67,7 +67,7 @@
             <input type="submit" value="Submit" class="btn btn-primary" />
         </form>
     }
-    else if (Model.FormReqDbs.Pointer == 5)
+    else if (Model.FormReqDbs.Pointer == 4)
     {
         <form asp-action="Report" method="post">
             <input value="@Model.FormReqDbs.Id" name="id" type="hidden" />

@@ -1,6 +1,13 @@
 ﻿@using FAREI_Project.ViewModel
+@using FormRequest.Models
 @model RequestsViewModel
+<head>
+    <link rel="stylesheet" href="~/css/ITO.css" />
+</head>
+@{
 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 @{
     ViewData["Title"] = "Index";
     var username = User.Identity.Name;
@@ -45,7 +52,7 @@
             <tr>
                 <th>RequestDate</th>
                 <th>ResponsibleOfficer</th>
-       
+                <th>Status</th>
                 <th>ProblemDescription</th>
                 <th></th>
             </tr>
@@ -53,11 +60,12 @@
         <tbody>
             @foreach (var item in Model.FormReqDb)
             {
+                var statusClass = StatusClass.GetStatusClass(item.status);
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.ResponsibleOfficer)</td>
-                   
-                    <td>@Html.DisplayFor(modelItem => item.ProblemDescription)</td>
+                    <td class="@statusClass status-cell" data-id="@item.Id">@Html.DisplayFor(modelItem => item.status)</td>
+                    <td >@Html.DisplayFor(modelItem => item.ProblemDescription)</td>
                     <td><a asp-action="Details" asp-route-id="@item.Id">Details</a></td>
                 </tr>
             }

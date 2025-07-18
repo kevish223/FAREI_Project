@@ -5,7 +5,7 @@
 
     switch (status) {   //status returning respective classes
         case "accepted": return "table-accept";
-        case "reject": return "table-reject";
+        case "rejected": return "table-reject";
         case "transit": return "table-pending";
         case "onsite": return "table-pending";
         case "accept transit": return "table-accept-transit";
@@ -25,7 +25,10 @@ $(document).on("click", ".action-btn", function () {
     var action = $(this).data("action");
     var button = $(this);
 
-    if (!confirm("Are you sure you want to " + action + " this request?")) return;  //confirmation msg according to action
+    if (action == "reject") {
+        if (!confirm("Are you sure you want to reject this request?"))
+            return;
+    }//confirmation msg according to action
 
     $.ajax({
         url: "/FormReqDbs/UpdateStatus",

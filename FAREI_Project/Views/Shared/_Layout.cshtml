@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - FAREI_Project</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/ITO.css" />
+    <link rel="stylesheet" href="~/css/Status.css" />
 </head>
 @{
             var username = User.Identity.Name;
@@ -191,7 +192,7 @@
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="ITOform">Repaired</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FormReqDbs" asp-action="ITOform">All requests</a>
                             </li>
                         </ul>
                         <partial name="_LoginPartial" />

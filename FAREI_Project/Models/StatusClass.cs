@@ -10,7 +10,7 @@
             return status.Trim().ToLower() switch
             {
                 "accepted" => "table-accept",
-                "reject" => "table-reject",
+                "rejected" => "table-reject",
                 "transit" => "table-pending",
                 "onsite" => "table-pending",
                 "accept transit" => "table-accept-transit",

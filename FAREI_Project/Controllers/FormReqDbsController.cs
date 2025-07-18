@@ -82,7 +82,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)&&j.status==null).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -769,33 +769,69 @@ namespace FAREI_Project.Controllers
         public IActionResult UpdateStatus(int id, string actionType)
         {
             var request = _context.FormReqDb.FirstOrDefault(r => r.Id == id);
+            var checkRegistry =_context.Registries.Any(j=>j.FormReqDbId==id);
             if (request == null)
                 return Json(new { success = false, message = "Request not found." });
 
-            
-            if (request.Pointer==0)
+            if (actionType == "reject")
             {
-                if (actionType == "accept") 
+                if (checkRegistry) 
                 {
-                    request.status = "Accepted";
-                    request.Pointer += 1;
+                    request.status = "send back";
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
-                else
+                else 
                 {
                     request.status = "rejected";
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
-            }
-            else if (request.Pointer == 1) 
+            } 
+            else if (actionType == "accept") 
             {
-                
-            }
-            else if (request.Pointer == 2)
-            {
+                if (request.Pointer == 0)
+                {
+                        request.status = "Accepted";
+                        request.Pointer += 1;
+                        _context.SaveChanges();
+                        return Json(new { success = true, newStatus = request.status });
+                }
+                else if (request.Pointer == 1)
+                {
+                    request.status = "repairing";
+                    request.Pointer += 2;
+                    _context.SaveChanges();
+                    return Json(new { success = true, newStatus = request.status });
+                }
+                else if (request.Pointer == 2)
+                {
+                    request.status = "Transitting";
+                    _context.SaveChanges();
+                    return Json(new { success = true, newStatus = request.status });
+                }
+                else if (request.Pointer == 4)
+                {
+                    request.status = "Start repairing";
+                    _context.SaveChanges();
+                    return Json(new { success = true, newStatus = request.status });
+                }
+                else if (request.Pointer == 5)
+                {
+                    if (checkRegistry)
+                    {
+                        request.status = "Return";
+                        _context.SaveChanges();
+                        return Json(new { success = true, newStatus = request.status });
+                    }
+                    else
+                    {
+                        request.status = "Complete";
+                        _context.SaveChanges();
+                        return Json(new { success = true, newStatus = request.status });
+                    }
 
+                }
             }
 
 

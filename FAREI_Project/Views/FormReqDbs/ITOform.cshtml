@@ -1,4 +1,5 @@
 ﻿@using FAREI_Project.ViewModel
+@using FormRequest.Models
 @model RequestsViewModel
 
 @{
@@ -31,6 +32,7 @@
                 @Html.DisplayNameFor(Model=>Model.FormReqDbs.status)
             </th>
             <th></th>
+            <th></th>
 
 
         </tr>
@@ -38,45 +40,21 @@
     <tbody>
 @foreach (var item in Model.FormReqDb) {
         
-            var status = item.status?.Trim().ToLower();
-            string statusClass = "";
-
-            if (string.IsNullOrWhiteSpace(status))
-            {
-                statusClass = "table-pending";
-                
-            }
-            else if (status == "accepted")
-            {
-                statusClass = "table-accept";
-               
-            }
-            else if (status == "reject")
-            {
-                statusClass = "table-reject";
-               
-            }
-            else if (status == "transit")
-            {
-                statusClass = "table-transit";
-       
-            }
-            else
-            {
-                statusClass = "table-pending";
-               
-            }
+            var statusClass = StatusClass.GetStatusClass(item.status);
         <tr>
 
             <td>
                 @Html.DisplayFor(modelItem => item.Site)
             </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Department)
             </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
             </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.ContactPhone)
             </td>
@@ -84,12 +62,20 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
             </td>
+
             <td>
-                @Html.DisplayFor(modelItem => item.SerialNumber)
-            </td>   
-            <td class ="@statusClass">
-                @Html.DisplayFor(modelItem=>item.status)
+                @Html.DisplayFor(modelItem => item.SerialNumber)                
             </td>
+
+            <td class="@statusClass status-cell" data-id="@item.Id">
+                @item.status
+            </td>
+
+            <td>                    
+                <button class="btn btn-sm btn-success action-btn accept-btn" data-id="@item.Id" data-action="accept" : "">Accept</button>                    
+                <button class="btn btn-sm btn-danger action-btn reject-btn" data-id="@item.Id" data-action="reject" : "">Reject</button>
+            </td>
+
             <td>
                 <a asp-action="repairedDetail" asp-route-id="@item.Id">Details</a>
             </td>
