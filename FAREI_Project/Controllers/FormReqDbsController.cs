@@ -82,7 +82,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)&&j.status==null).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)&&j.status=="pending").ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -435,7 +435,7 @@ namespace FAREI_Project.Controllers
                 FormReqDbs = new FormReqDb(), // empty form for Create page
                 AllUsers = users
             };
-            return View(viewModel);
+            return View("Create",viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

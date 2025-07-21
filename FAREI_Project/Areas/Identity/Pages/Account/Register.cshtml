@@ -45,7 +45,15 @@
                 <label asp-for="Input.Site">Confirm Site</label>
                 <span asp-validation-for="Input.Site" class="text-danger"></span>
             </div>
-            
+            <div class="form-floating mb-3">
+                <select asp-for="Input.Supervisor" class="form-control" autocomplete="new-Supervisor" aria-required="true" asp-items="Model.Supervisor" placeholder="Supervisor">
+                    <option value="">
+
+                    </option>
+                </select>
+                <label asp-for="Input.Supervisor">Confirm Supervisor</label>
+                <span asp-validation-for="Input.Supervisor" class="text-danger"></span>
+            </div>
        
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>

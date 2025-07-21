@@ -20,6 +20,7 @@
                 "complete" => "table-complete",
                 "repairing" => "table-repairing",
                 "send back" => "table-sendback",
+                "pending" => "table-pending",
                 _ => "table-pending"
             };
         }

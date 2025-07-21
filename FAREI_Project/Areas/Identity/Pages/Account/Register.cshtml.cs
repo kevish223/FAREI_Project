@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using AspNetCoreGeneratedDocument;
 using FAREI_Project.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -67,6 +68,7 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public List<SelectListItem> Types { get; set; }
         public List<SelectListItem> Sites { get; set; }
+        public List<SelectListItem> Supervisor { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -110,8 +112,8 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             [Display(Name = "Site")]
             public string Site { get; set; }
 
-            
-
+            [Display(Name = "Supervisor")]
+            public string Supervisor { get; set; }
 
         }
 
@@ -140,6 +142,12 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
                 new SelectListItem { Value = "Plaisance", Text = "Plaisance" },
                 new SelectListItem { Value = "Vacoas", Text = "Vacoas" },
             };
+            Supervisor = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "KEVISH1@gmail.com", Text = "KEVISH1@gmail.com" },
+                
+            };
+            
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -164,12 +172,18 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
                 new SelectListItem { Value = "Plaisance", Text = "Plaisance" },
                 new SelectListItem { Value = "Vacoas", Text = "Vacoas" },
             };
+            Supervisor = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "KEVISH1@gmail.com", Text = "KEVISH1@gmail.com" },
+
+            };
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
                 user.Type = Input.Type;
                 user.Site = Input.Site;
+                user.Supervisor = Input.Supervisor;
                 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

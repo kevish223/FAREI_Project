@@ -1,10 +1,12 @@
 ﻿@using FAREI_Project.ViewModel
 @using FormRequest.Models
 @model RequestsViewModel
-@{
-    
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+
+<head>
+    <link rel="stylesheet" href="~/css/Supervisor.css" />
+</head>
+<partial name="Navbar"/>
+<div class="container">
 <h1>Supervisor</h1>
 <table class="table">
     <thead>
@@ -37,3 +39,4 @@
 }
     </tbody>
 </table>
+</div>

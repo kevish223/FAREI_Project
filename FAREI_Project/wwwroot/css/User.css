@@ -1,0 +1,113 @@
+﻿﻿.page-title {
+    color: #5E2B97;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.table {
+    padding: 20px auto !important;
+}
+/* Table Header */
+.table-header th {
+    background-color: #666E51;
+    color: white;
+}
+
+/* Details Button */
+.btn-H {
+    background-color: #809276;
+    color: white;
+    border: none;
+}
+
+    .btn-H:hover {
+        background-color: #768886;
+        color: white;
+    }
+
+
+.navbar {
+    background-color: #10383A !important;
+}
+
+    .navbar a,
+    .navbar-brand {
+        color: white !important;
+    }
+
+        .navbar a:hover {
+            color: #768886 !important;
+        }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f3e5f5;
+}
+
+
+body {
+    background-color: #cadcd7 !important;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+    background-color: transparent !important;
+}
+
+.R-textbox {
+    border: 2px solid #B0884C;
+}
+﻿.page-title {
+    color: #5E2B97;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Table Header */
+.table-header th {
+    background-color: #666E51;
+    color: white;
+}
+
+/* Details Button */
+.btn-H {
+    background-color: #809276;
+    color: white;
+    border: none;
+}
+
+    .btn-H:hover {
+        background-color: #768886;
+        color: white;
+    }
+
+
+.navbar {
+    background-color: #10383A !important;
+}
+
+    .navbar a,
+    .navbar-brand {
+        color: white !important;
+    }
+
+        .navbar a:hover {
+            color: #768886 !important;
+        }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f3e5f5;
+}
+
+
+body {
+    background-color: #cadcd7 !important;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+    background-color: transparent !important;
+}
+
+.R-textbox {
+    border: 2px solid #B0884C;
+}

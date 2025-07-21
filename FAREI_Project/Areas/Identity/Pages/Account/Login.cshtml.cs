@@ -2,14 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using FAREI_Project.Data;
 using FAREI_Project.Models;
-
+using FAREI_Project.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,13 +26,18 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
-       
+        private readonly ApplicationDbContext _context;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public RequestsViewModel RequestVM { get; set; }
+
+
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _logger = logger;
-  
+            _userManager = userManager;
+            _context = context;
+
         }
 
         /// <summary>
@@ -106,6 +113,11 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+            RequestVM = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

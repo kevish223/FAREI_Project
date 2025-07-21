@@ -4,6 +4,7 @@ using FAREI_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FAREI_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250720094901_requestsetup")]
+    partial class requestsetup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,9 @@ namespace FAREI_Project.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -70,9 +76,6 @@ namespace FAREI_Project.Data.Migrations
                     b.Property<string>("Site")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Supervisor")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -84,6 +87,8 @@ namespace FAREI_Project.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -267,6 +272,9 @@ namespace FAREI_Project.Data.Migrations
                     b.Property<string>("Feedback")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("FormReqDbId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Pointer")
                         .HasColumnType("int");
 
@@ -300,6 +308,8 @@ namespace FAREI_Project.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FormReqDbId");
 
                     b.ToTable("FormReqDb");
                 });
@@ -441,6 +451,13 @@ namespace FAREI_Project.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FAREI_Project.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("FAREI_Project.Models.ApplicationUser", null)
+                        .WithMany("AllUsers")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("FAREI_Project.Models.Registry", b =>
                 {
                     b.HasOne("FormRequest.Models.FormReqDb", "FormReqDb")
@@ -457,6 +474,13 @@ namespace FAREI_Project.Data.Migrations
                         .HasForeignKey("FormReqDbID");
 
                     b.Navigation("FormReqDb");
+                });
+
+            modelBuilder.Entity("FormRequest.Models.FormReqDb", b =>
+                {
+                    b.HasOne("FormRequest.Models.FormReqDb", null)
+                        .WithMany("FormReqDbs")
+                        .HasForeignKey("FormReqDbId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -510,8 +534,15 @@ namespace FAREI_Project.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FAREI_Project.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("AllUsers");
+                });
+
             modelBuilder.Entity("FormRequest.Models.FormReqDb", b =>
                 {
+                    b.Navigation("FormReqDbs");
+
                     b.Navigation("Registries");
                 });
 #pragma warning restore 612, 618
