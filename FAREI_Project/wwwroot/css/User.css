@@ -5,12 +5,23 @@
 }
 
 .table {
-    padding: 20px auto !important;
+    padding: 20px  !important;
 }
 /* Table Header */
 .table-header th {
     background-color: #666E51;
     color: white;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    
+    margin: 0 !important;
+}
+
+input[type=number] {
+    -moz-appearance: textfield !important;
 }
 
 /* Details Button */

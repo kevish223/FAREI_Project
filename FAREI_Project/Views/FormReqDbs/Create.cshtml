@@ -1,9 +1,9 @@
 ﻿﻿@using FAREI_Project.ViewModel
 @model RequestsViewModel
+<head>
+    <link rel="stylesheet" href="~/css/User.css" />
+</head>
 
-@{
-    ViewData["Title"] = "Repair/Servicing Request Form";
-}
 @{
     ViewData["Title"] = "Index";
     var username = User.Identity.Name;
@@ -27,6 +27,8 @@
 }
 
 <partial name="Navbar"></partial>
+<div class="container">
+    @using (Html.BeginForm()){
 <h2>Repair/Servicing Request Form</h2>
 
 
@@ -37,7 +39,7 @@
 
         <div class="col-md-3">
             <label >Site:</label>
-            <select asp-for="FormReqDbs.Site" class="form-control" id="Site" >
+                <select asp-for="FormReqDbs.Site" class="form-control" id="Site" required>
                 <option value="">-- Select site --</option>
                 <option> St Pierre </option>
                 <option> Reduit </option>
@@ -51,7 +53,7 @@
         </div>
         <div class="col-md-3">
             <label >Department:</label>
-            <select asp-for="FormReqDbs.Department" class="form-control" id="Department">
+                <select asp-for="FormReqDbs.Department" class="form-control" id="Department" required>
                 <option value="">-- Select Department --</option>
                 <option> IT Dept </option>
                 <option> Finance Dept </option>
@@ -61,17 +63,19 @@
         </div>
         <div class="col-md-3">
             <label asp-for="FormReqDbs.ResponsibleOfficer">Responsible Officer:</label>
-            <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control"   />
+                <input asp-for="FormReqDbs.ResponsibleOfficer" class="form-control" required />
         </div>
         <div class="col-md-3">
             <label asp-for="FormReqDbs.Supervisor">Supervisor:</label>
         <input asp-for="FormReqDbs.Supervisor" class="form-control" value="@Supervisor" style="background-color:lightgray" readonly/>
         </div>
         <input asp-for="FormReqDbs.status" type="hidden" value="pending"/>
+        <input asp-for="FormReqDbs.Pointer" type="hidden" value=0/>
+        
     </div>
     <div class="form-group mb-4">
         <label asp-for="FormReqDbs.ContactPhone">Contact Phone:</label>
-        <input asp-for="FormReqDbs.ContactPhone" class="form-control" maxlength="8" minlength="5"  />
+            <input type="number" asp-for="FormReqDbs.ContactPhone" class="form-control"  required/>
     </div>
 
     <h4>Equipment Section</h4>
@@ -86,7 +90,7 @@
         <tbody>
             <tr>
                 <td>
-                    <select  class="form-control" id="Type" >
+                        <select class="form-control" id="Type" required>
                         <option>-- Select Equipment --</option>
                         <option> CPU </option>
                         <option> Monitor </option>
@@ -96,33 +100,34 @@
                         <option>Scanner</option>
                         <option>laptop</option>
                     </select>
+                   
                 </td>
                 <td>
-                    <select asp-for="FormReqDbs.SerialNumber" class="form-control" id="SerialNumber" >
+                        <select asp-for="FormReqDbs.SerialNumber" class="form-control" id="SerialNumber" required>
 
                     </select>
-                    </select>
+                   
                 </td>
-                <td><input asp-for="FormReqDbs.ProblemDescription" class="form-control"  /></td>
+                    <td><input asp-for="FormReqDbs.ProblemDescription" class="form-control" required/></td>
             </tr>
         </tbody>
     </table>
-
-
-
-
 
     <div class="form-group">
         <input type="submit" value="Submit" class="btn btn-primary" />
         <input type="reset" value="Cancel" class="btn btn-outline-secondary" />
     </div>
 </form>
+}
+</div>
 
 @section Scripts {
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+       
     }
-}
+
 <script>
     const Site = document.getElementById("Site");
     const Department = document.getElementById("Department");
@@ -157,7 +162,7 @@
                     `&type=${encodeURIComponent(TypeVariable)}`);
                 if (!response.ok) throw new Error("Server error");
                 const data = await response.json();
-
+                console.log(data);
                 SerialNumber.innerHTML = "";
                 data.forEach(item => {
                     SerialNumber.innerHTML += `<option>${item.serialNumber}</option>`;
@@ -168,3 +173,4 @@
         }
     }
 </script>
+}

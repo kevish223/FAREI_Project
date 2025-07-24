@@ -19,22 +19,22 @@
                 @Html.DisplayNameFor(model => model.FormReqDbs.Site)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FormReqDbs.Department)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+            </th>                
+            <th>            
+                @Html.DisplayNameFor(Model => Model.Inventory.EquipmentType)               
             </th>
-            <th>
-                @Html.DisplayNameFor(Model=>Model.FormReqDbs.status)
+            <th>                    
+                @Html.DisplayNameFor(Model => Model.ITTreport.Report)            
+            </th>
+            <th>                   
+                @Html.DisplayNameFor(Model => Model.FormReqDbs.status)                
             </th>
             <th></th>
             <th></th>
@@ -51,25 +51,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Site)
             </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.Department)
-            </td>
-
             <td>
                 @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
-            </td>
-
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactPhone)
-            </td>
-  
+            </td> 
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
             </td>
 
             <td>
                 @Html.DisplayFor(modelItem => item.SerialNumber)                
+            </td>
+
+            <td>                        
+                @Html.DisplayFor(modelItem => item.Equipments.EquipmentType)        
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ITTReports.Report)
             </td>
 
             <td class="@statusClass status-cell" data-id="@item.Id">

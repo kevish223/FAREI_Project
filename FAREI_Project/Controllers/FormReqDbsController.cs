@@ -38,7 +38,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Include(m=>m.ITTReports).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             var username = User.Identity.Name;
@@ -91,7 +91,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Include(m=>m.ITTReports).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -125,7 +125,7 @@ namespace FAREI_Project.Controllers
             var Site = user.Site;
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j => (j.status.Contains("Transitting") || j.status.Contains("Send back") || j.status.Contains("Return")) && j.Site.Contains(Site) ).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Where(j => (j.status.Contains("Transitting") || j.status.Contains("Send back") || j.status.Contains("Return")) && j.Site.Contains(Site) ).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -173,7 +173,7 @@ namespace FAREI_Project.Controllers
             {
              
                 FormReqDb=await _context.FormReqDb.ToListAsync(),
-                Registries = await _context.Registries.Where(j=>  j.From==Site || j.To==Site ).ToListAsync(),
+                Registries = await _context.Registries.Include(m=>m.Equipment).Where(j=>  j.From==Site || j.To==Site ).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -233,13 +233,14 @@ namespace FAREI_Project.Controllers
                 return NotFound();
             }
 
-            var formReqDb = await _context.FormReqDb?
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var formReqDb = await _context.FormReqDb?.FirstOrDefaultAsync(m => m.Id == id);
+            var equipment= await _context.Equipment.FirstOrDefaultAsync(m=>m.SerialNumber==formReqDb.SerialNumber);
             var allUsers = _context.Users.ToList();
             var viewModel = new RequestsViewModel
             {
                 FormReqDbs = formReqDb,
-                AllUsers = allUsers
+                AllUsers = allUsers,
+                Inventory = equipment   
             };
             if (formReqDb == null)
             {
@@ -355,18 +356,19 @@ namespace FAREI_Project.Controllers
                 return NotFound();
             }
 
-            var formReqDb = await _context.FormReqDb
-               .FirstOrDefaultAsync(m => m.Id == id);
-            var Registry = await _context.Registries
-               .FirstOrDefaultAsync(m => m.FormReqDbId == id);
-
+            var formReqDb = await _context.FormReqDb.FirstOrDefaultAsync(m => m.Id == id);
+            var Registry = await _context.Registries.FirstOrDefaultAsync(m => m.FormReqDbId == id);
+            var equipment = await _context.Equipment.FirstOrDefaultAsync(m => m.SerialNumber==formReqDb.SerialNumber);
+            var ITTReport =await _context.ITTreport.FirstOrDefaultAsync(m=>m.FormReqDb==id);
             var AllUsers = _userManager.Users.ToList();
 
             var viewModel = new RequestsViewModel
             {
                 FormReqDbs = formReqDb,
                 Registry = Registry,
-                AllUsers = AllUsers
+                AllUsers = AllUsers,
+                Inventory= equipment,
+                ITTreport=ITTReport
             };
             if (formReqDb == null)
             {
@@ -439,16 +441,20 @@ namespace FAREI_Project.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(RequestsViewModel model)
+        public async Task<IActionResult> Create(RequestsViewModel model)
         {
 
             if (ModelState.IsValid)
             {
+
                 // Example: create new FormReqDb object to save
                 var newForm = model.FormReqDbs;
+                var equipment = await _context.Equipment?.FirstOrDefaultAsync(m=>m.SerialNumber==newForm.SerialNumber);
 
                 // Optionally set extra fields:
                 newForm.RequestDate = DateTime.Now;
+                newForm.Pointer = 0;
+                newForm.Equipments =equipment;
 
                 _context.FormReqDb.Add(newForm);
                 _context.SaveChanges();
@@ -643,11 +649,15 @@ namespace FAREI_Project.Controllers
             else if(Status == 3)
             {
                 formReqDb.status = "Onsite request";
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TechnicianForm));
             }
             else if (Status == 4) 
             {
                 formReqDb.status = "Transit request";
                 formReqDb.Pointer += 1;//2
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TechnicianForm));
             }
 
 
@@ -698,7 +708,7 @@ namespace FAREI_Project.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(SupervisorForm));
+            return RedirectToAction(nameof(Feedback));
         }
 
         [HttpPost]
@@ -855,6 +865,7 @@ namespace FAREI_Project.Controllers
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             var Equipment = await _context.Equipment.FirstOrDefaultAsync(f => f.SerialNumber==formReqDb.SerialNumber);
 
+
             if (formReqDb == null)
             {
                 return NotFound();
@@ -876,6 +887,7 @@ namespace FAREI_Project.Controllers
                         SerialNumber=SerialNumber,
                         Report=Remarks
                     };
+                    formReqDb.ITTReports =newForm;
                     _context.ITTreport.Add(newForm);
                     _context.SaveChanges();
                     formReqDb.status = "Pending request";
@@ -967,6 +979,7 @@ namespace FAREI_Project.Controllers
             try
             {
                 var formReqDb = await _context.FormReqDb.FindAsync(model.Registry?.FormReqDbId);
+                var equipment =await _context.Equipment.FirstOrDefaultAsync(m=>m.SerialNumber==formReqDb.SerialNumber);
                 var existRegistry= _context.Registries.Any(k=>k.FormReqDbId==formReqDb.Id);
                 var newform = model.Registry;
                 if (formReqDb == null)
@@ -979,6 +992,7 @@ namespace FAREI_Project.Controllers
                 {
                     newform.To= formReqDb.Site;
                     newform.From = "Reduit";
+                    newform.Equipment = equipment;
                     _context.Registries.Add(newform);
                     _context.SaveChanges();
                     return RedirectToAction("RegistryForm");
@@ -987,6 +1001,7 @@ namespace FAREI_Project.Controllers
                 {
                     newform.From = formReqDb.Site;
                     newform.To = "Reduit";
+                    newform.Equipment = equipment;
                     _context.Registries.Add(newform);
                     _context.SaveChanges();
                     return RedirectToAction("RegistryForm");

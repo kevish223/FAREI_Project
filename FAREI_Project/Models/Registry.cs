@@ -15,7 +15,7 @@ namespace FAREI_Project.Models
         public string? Remarks { get; set; }
         public bool IsValid { get; set; }
         public int? FormReqDbId { get; set; }
-        public FormReqDb FormReqDb { get; set; }
+        public EquipmentInventory? Equipment{ get; set; }
 
     }
 }

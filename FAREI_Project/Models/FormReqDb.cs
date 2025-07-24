@@ -1,5 +1,6 @@
 ﻿using FAREI_Project.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FormRequest.Models
 {
@@ -19,11 +20,11 @@ namespace FormRequest.Models
         [Required]
         public string Department { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "contact phone is required")]
         public string ResponsibleOfficer { get; set; }
 
-
-        public string ContactPhone { get; set; }
+        [Required(ErrorMessage = "contact phone is required")]
+        public int ContactPhone { get; set; }
 
         // Equipment Section (1 entry for now — add related tables later if needed)
         public int Pointer { get; set; }
@@ -40,8 +41,10 @@ namespace FormRequest.Models
 
         public String? Feedback { get; set; }
 
-        public List<Registry> Registries { get; set; } = new List<Registry>();
-
+        public List<Registry>? Registries { get; set; } = new List<Registry>();
+        [ForeignKey("EquipmentID")]
+        public EquipmentInventory? Equipments { get; set; } 
+        public ITTreport? ITTReports { get; set; } 
         public static implicit operator List<object>(FormReqDb? v)
         {
             throw new NotImplementedException();

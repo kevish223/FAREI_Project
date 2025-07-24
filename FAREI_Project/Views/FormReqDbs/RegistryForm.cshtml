@@ -14,8 +14,17 @@
             </th>       
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
-            </th>      
-
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+                
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inventory.EquipmentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inventory.EquipmentName)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
             </th>        
@@ -32,8 +41,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ResponsibleOfficer)
             </td>
-         
-
+            <td>
+                @Html.DisplayFor(modelItem => item.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Equipments.EquipmentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Equipments.EquipmentName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
             </td>           

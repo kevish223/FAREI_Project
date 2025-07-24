@@ -12,6 +12,15 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Inventory.SerialNumber)
+            </th>                
+            <th>            
+                @Html.DisplayNameFor(model => model.Inventory.EquipmentType)                
+            </th>                
+            <th>            
+                @Html.DisplayNameFor(model => model.Inventory.EquipmentName)                
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Registry.From)
             </th>
             <th>
@@ -23,12 +32,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Registry.Remarks)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FormReqDbs.Department)
-            </th>
+
             <th>
                 Arrived
             </th>
+      
 
             <th></th>
         </tr>
@@ -36,6 +44,15 @@
     <tbody>
 @foreach (var item in Model.Registries) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Equipment.SerialNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Equipment.EquipmentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Equipment.EquipmentName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.From)
             </td>
@@ -48,9 +65,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Remarks)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FormReqDb.Department)
-            </td>
+        
             <td>
                     @Html.DisplayFor(modelItem => item.IsValid)
             </td>

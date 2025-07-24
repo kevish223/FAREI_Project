@@ -4,6 +4,7 @@ using FAREI_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FAREI_Project.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250722104046_testing5")]
+    partial class testing5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,6 +146,9 @@ namespace FAREI_Project.Data.Migrations
                     b.Property<int?>("FormReqDb")
                         .HasColumnType("int");
 
+                    b.Property<int?>("FormReqDbId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Report")
                         .HasColumnType("nvarchar(max)");
 
@@ -150,6 +156,8 @@ namespace FAREI_Project.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("FormReqDbId");
 
                     b.ToTable("ITTreport");
                 });
@@ -164,9 +172,6 @@ namespace FAREI_Project.Data.Migrations
 
                     b.Property<string>("Driver")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EquipmentID")
-                        .HasColumnType("int");
 
                     b.Property<int?>("FormReqDbId")
                         .HasColumnType("int");
@@ -187,8 +192,6 @@ namespace FAREI_Project.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RegistryId");
-
-                    b.HasIndex("EquipmentID");
 
                     b.HasIndex("FormReqDbId");
 
@@ -261,8 +264,9 @@ namespace FAREI_Project.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ContactPhone")
-                        .HasColumnType("int");
+                    b.Property<string>("ContactPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Department")
                         .IsRequired()
@@ -273,9 +277,6 @@ namespace FAREI_Project.Data.Migrations
 
                     b.Property<string>("Feedback")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ITTReportsID")
-                        .HasColumnType("int");
 
                     b.Property<int>("Pointer")
                         .HasColumnType("int");
@@ -312,8 +313,6 @@ namespace FAREI_Project.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentID");
-
-                    b.HasIndex("ITTReportsID");
 
                     b.ToTable("FormReqDb");
                 });
@@ -455,17 +454,20 @@ namespace FAREI_Project.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FAREI_Project.Models.ITTreport", b =>
+                {
+                    b.HasOne("FormRequest.Models.FormReqDb", null)
+                        .WithMany("ITTReports")
+                        .HasForeignKey("FormReqDbId");
+                });
+
             modelBuilder.Entity("FAREI_Project.Models.Registry", b =>
                 {
-                    b.HasOne("FAREI_Project.Models.EquipmentInventory", "Equipment")
-                        .WithMany()
-                        .HasForeignKey("EquipmentID");
-
-                    b.HasOne("FormRequest.Models.FormReqDb", null)
+                    b.HasOne("FormRequest.Models.FormReqDb", "FormReqDb")
                         .WithMany("Registries")
                         .HasForeignKey("FormReqDbId");
 
-                    b.Navigation("Equipment");
+                    b.Navigation("FormReqDb");
                 });
 
             modelBuilder.Entity("FAREI_Project.Models.Third_Party", b =>
@@ -483,13 +485,7 @@ namespace FAREI_Project.Data.Migrations
                         .WithMany()
                         .HasForeignKey("EquipmentID");
 
-                    b.HasOne("FAREI_Project.Models.ITTreport", "ITTReports")
-                        .WithMany()
-                        .HasForeignKey("ITTReportsID");
-
                     b.Navigation("Equipments");
-
-                    b.Navigation("ITTReports");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -545,6 +541,8 @@ namespace FAREI_Project.Data.Migrations
 
             modelBuilder.Entity("FormRequest.Models.FormReqDb", b =>
                 {
+                    b.Navigation("ITTReports");
+
                     b.Navigation("Registries");
                 });
 #pragma warning restore 612, 618
