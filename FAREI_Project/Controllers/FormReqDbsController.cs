@@ -24,7 +24,18 @@ namespace FAREI_Project.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private int pointerStatus = 0;
+        private int atNewRequest = 0;
+        private int atAccepted = 1;
+        private int atTransitRequest = 2;
+        private int atOnsiteRequest = 3;
+        private int atTransitting = 4;
+        private int atReport = 5;
+        private int atPendingRequest = 6;
+        private int atStartRepairing = 7;
+        private int atFinalRequest = 8;
+        private int atReturn = 9;
+
+
 
         public FormReqDbsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -140,6 +151,16 @@ namespace FAREI_Project.Controllers
             };
             return View(model);
         }
+        public async Task<IActionResult> UserForm()
+        {
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
         public async Task<IActionResult> Movement()
         {
             var model = new RequestsViewModel
@@ -150,6 +171,23 @@ namespace FAREI_Project.Controllers
             };
             return View(model);
         }
+
+        public async Task<IActionResult> SAllRequest()
+        {
+            var name=User.Identity.Name;
+            if (name==null)
+            {
+                return RedirectToAction("TechnicianForm");
+            }
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Where(j => j.Supervisor == name).ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+
         public async Task<IActionResult> MovementConfirmation()
         {
             var model = new RequestsViewModel
@@ -159,6 +197,54 @@ namespace FAREI_Project.Controllers
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
+        }
+        public async Task<IActionResult> SReportForm()
+        {
+            
+            var name = User.Identity.Name;
+            if (name==null) 
+            {
+                return RedirectToAction("Index");
+            }
+            var user=await _context.Alluser.FirstOrDefaultAsync(m=>m.UserName==name);
+            if (user.Type=="User")
+            {
+                var User = new RequestsViewModel 
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Where(j => j.ResponsibleOfficer==name).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(User);
+            }else if (user.Type == "Supervisor") 
+            {
+                var Supervisor = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(j => j.Supervisor == name).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(Supervisor);
+            }else if (user.Type== "Technician" || user.Type== "ITO") 
+            {
+                var model = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(model);
+            } else if (user.Type== "Registry") 
+            {
+                var Registry = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(m=>m.Site==user.Site).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(Registry);
+            }
+            return View();
         }
         public async Task<IActionResult> Transite()
         {
@@ -428,14 +514,22 @@ namespace FAREI_Project.Controllers
         }
 
         // GET: FormReqDbs/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var name = User.Identity.Name;
             var users = _context.Users.ToList();
+            if (name == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var FindUser = await _context.Alluser.FirstOrDefaultAsync(m=>m.UserName==name);
 
             var viewModel = new RequestsViewModel
             {
-                FormReqDbs = new FormReqDb(), // empty form for Create page
-                AllUsers = users
+                FormReqDbs = new FormReqDb(), 
+                AllUsers = users,
+                User=FindUser
+               
             };
             return View("Create",viewModel);
         }
@@ -446,20 +540,42 @@ namespace FAREI_Project.Controllers
 
             if (ModelState.IsValid)
             {
+                var name = User.Identity.Name;
+                if (name == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                var user = await _context.Alluser.FirstOrDefaultAsync(m => m.UserName == name);
+                if (user.Type=="User") 
+                {
+                    var newForm = model.FormReqDbs;
+                    var equipment = await _context.Equipment?.FirstOrDefaultAsync(m => m.SerialNumber == newForm.SerialNumber);
 
-                // Example: create new FormReqDb object to save
-                var newForm = model.FormReqDbs;
-                var equipment = await _context.Equipment?.FirstOrDefaultAsync(m=>m.SerialNumber==newForm.SerialNumber);
+                    newForm.RequestDate = DateTime.Now;
+                    newForm.Pointer = 0;
+                    newForm.Equipments = equipment;
 
-                // Optionally set extra fields:
-                newForm.RequestDate = DateTime.Now;
-                newForm.Pointer = 0;
-                newForm.Equipments =equipment;
+                    _context.FormReqDb.Add(newForm);
+                    _context.SaveChanges();
 
-                _context.FormReqDb.Add(newForm);
-                _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }else if (user.Type == "Supervisor") 
+                {
+                    var newForm = model.FormReqDbs;
+                    var equipment = await _context.Equipment?.FirstOrDefaultAsync(m => m.SerialNumber == newForm.SerialNumber);
 
-                return RedirectToAction("Index");
+                    newForm.RequestDate = DateTime.Now;
+                    newForm.Pointer = 1;
+                    newForm.Equipments = equipment;
+                    newForm.status = "Accepted";
+
+                    _context.FormReqDb.Add(newForm);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+              
+
             }
 
             if (!ModelState.IsValid)
@@ -593,6 +709,7 @@ namespace FAREI_Project.Controllers
             return View(formReqDb);
         }
 
+
         // POST: FormReqDbs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -627,6 +744,52 @@ namespace FAREI_Project.Controllers
             }
             return View(formReqDb);
         }
+        [HttpGet("FormReqDbs/EditUser/{UserName}")]
+        public async Task<IActionResult> EditUser(String? UserName)
+        {
+            if (UserName == null)
+            {
+                return NotFound();
+            }
+            var allUsers =  _context.Users.ToList();
+            var Alluser = await _context.Alluser.FirstOrDefaultAsync(m=>m.UserName==UserName);
+            if (Alluser == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new RequestsViewModel
+
+            {
+                AllUsers=allUsers,
+                User = Alluser
+            };
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> editUser(String userName,String Supervisor,String Site,String dept)
+        {
+            Console.WriteLine($"Searching for username: {userName}");
+            var Alluser = await _context.Alluser.FirstOrDefaultAsync(m => m.UserName == userName);
+            Alluser.Supervisor = Supervisor;
+            Alluser.Site=Site;
+            Alluser.Dept = dept;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("UserForm");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FilterByDate(DateTime Date)
+        {
+            var Request =await _context.FormReqDb.Where(m=>m.RequestDate>Date).Include(j=>j.Equipments).ToListAsync();
+            var view = new RequestsViewModel
+            {
+                FormReqDb = Request,
+                AllUsers=await _context.Alluser.ToListAsync(),
+            };
+            return View("SReportForm",view);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeStatus(int id, int Status)
@@ -645,10 +808,12 @@ namespace FAREI_Project.Controllers
             else if (Status == 2)
             {
                 formReqDb.status = "Rejected";
+                formReqDb.Pointer = 0;
             }
             else if(Status == 3)
             {
                 formReqDb.status = "Onsite request";
+                formReqDb.Pointer += 2;//3
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TechnicianForm));
             }
@@ -733,28 +898,33 @@ namespace FAREI_Project.Controllers
                     formReqDb.remarks = Remarks;
                 }
             } 
-            else if (formReqDb.Pointer == 2)
+            else if (formReqDb.Pointer == atTransitRequest)
             {
                 formReqDb.status = "Transitting";
+                formReqDb.Pointer += 2;
             }
-            else if (formReqDb.Pointer == 1)
+            else if (formReqDb.Pointer == atOnsiteRequest)
             {
                 formReqDb.status = "Repairing";
                 formReqDb.Pointer += 2;
             }
-            else if (formReqDb.Pointer == 4)
+            else if (formReqDb.Pointer == atPendingRequest)
             {
                 formReqDb.status = "Start repairing";
+                formReqDb.Pointer += 1;//7
             }
-            else if (formReqDb.Pointer == 5)
+            else if (formReqDb.Pointer == atFinalRequest)
             {
                 if (registry)
                 {
                     formReqDb.status = "Return";
+                    formReqDb.Pointer += 1;//9
                 }
                 else
                 {
                     formReqDb.status = "Complete";
+                    formReqDb.Pointer += 1;//9
+                    formReqDb.RequestDate = DateTime.Now;
                 }
             }
             try
@@ -788,55 +958,61 @@ namespace FAREI_Project.Controllers
                 if (checkRegistry) 
                 {
                     request.status = "send back";
+                    request.Pointer = 0;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
                 else 
                 {
                     request.status = "rejected";
+                    request.Pointer = 0;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
             } 
             else if (actionType == "accept") 
             {
-                if (request.Pointer == 0)
+                if (request.Pointer == atNewRequest)
                 {
                         request.status = "Accepted";
                         request.Pointer += 1;
                         _context.SaveChanges();
                         return Json(new { success = true, newStatus = request.status });
                 }
-                else if (request.Pointer == 1)
+                else if (request.Pointer == atOnsiteRequest)
                 {
                     request.status = "repairing";
                     request.Pointer += 2;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
-                else if (request.Pointer == 2)
+                else if (request.Pointer == atTransitRequest)
                 {
                     request.status = "Transitting";
+                    request.Pointer += 2;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
-                else if (request.Pointer == 4)
+                else if (request.Pointer == atPendingRequest)
                 {
                     request.status = "Start repairing";
+                    request.Pointer += 1;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
-                else if (request.Pointer == 5)
+                else if (request.Pointer == atFinalRequest)
                 {
                     if (checkRegistry)
                     {
                         request.status = "Return";
+                        request.Pointer += 1;
                         _context.SaveChanges();
                         return Json(new { success = true, newStatus = request.status });
                     }
                     else
                     {
                         request.status = "Complete";
+                        request.Pointer += 1;
                         _context.SaveChanges();
                         return Json(new { success = true, newStatus = request.status });
                     }
@@ -870,28 +1046,29 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
-            if (formReqDb.Pointer == 4)
+            if (formReqDb.Pointer == atStartRepairing)
             {
                 var ITTreport =await _context.ITTreport.FirstOrDefaultAsync(f=>f.FormReqDb==id);
-                ITTreport.Report +=" "+ Remarks;
+                ITTreport.Report +=" 2. "+ Remarks;
                 formReqDb.status = "Final request";
-                formReqDb.Pointer += 1;//5
+                formReqDb.Pointer += 1;//8
 
             }
-            else if (formReqDb.Pointer==3)
+            else if (formReqDb.Pointer==atReport)
+
             {
 
                     var newForm = new ITTreport
                     {
                         FormReqDb=id,
                         SerialNumber=SerialNumber,
-                        Report=Remarks
+                        Report="1. " + Remarks
                     };
                     formReqDb.ITTReports =newForm;
                     _context.ITTreport.Add(newForm);
                     _context.SaveChanges();
                     formReqDb.status = "Pending request";
-                    formReqDb.Pointer += 1;//4
+                    formReqDb.Pointer += 1;//6
             }
             else 
             {
@@ -938,14 +1115,14 @@ namespace FAREI_Project.Controllers
                 formReqDb.status = "rejected";
                 Registry.Remarks = Remarks;
                 }
-                else if (formReqDb.Pointer == 2)
+                else if (formReqDb.Pointer == 4)
                 {
                     formReqDb.status = "Repairing";                
                     Registry.IsValid = true;
                     Registry.Remarks = Remarks;
-                    formReqDb.Pointer += 1;//3
+                    formReqDb.Pointer += 1;//5
                 } 
-                else if (formReqDb.Pointer == 5)            
+                else if (formReqDb.Pointer == 9)            
                 {                
                 formReqDb.status = "Complete";
                 formReqDb.RequestDate =DateTime.Now;

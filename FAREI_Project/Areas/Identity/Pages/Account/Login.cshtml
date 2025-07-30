@@ -4,6 +4,11 @@
 @{
     ViewData["Title"] = "Log in";
 }
+<head>
+    <link rel="stylesheet" href="~/css/Login.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+
+</head>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
@@ -14,45 +19,52 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                <partial name="_LoginPartial" />
+                
             </div>
         </div>
     </nav>
 </header>
-<h1 class="text-center">@ViewData["Title"]</h1>
-<div class="center">
-    <div class="col-md-4 mx-auto">
-        <section>
-            <form id="account" method="post">
-              
+<body>
+
+    <div class="login-wrapper">
+    <div class="login-container">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        <form id="account" method="post" class="login-form">
+
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                 
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <div class="mb-3">
+            
                     <label asp-for="Input.Email" class="form-label">Email</label>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />           
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+        
+                <div class="mb-3">
+            
                     <label asp-for="Input.Password" class="form-label">Password</label>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />            
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
-              
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
+
+        
+                <div class="form-check mb-3">
+                    <label asp-for="Input.RememberMe" class="form-label">                        
                         <input class="form-check-input" asp-for="Input.RememberMe" />
                         @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
+                    </label>                                       
                 </div>
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                 </div>
-                <div>
-                    @*
+            
+                <div class="text-center mt-3">
+                    
                     <p>
                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>
-                    *@
+                    
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
                     </p>
@@ -64,9 +76,10 @@
                     
                 </div>
             </form>
-        </section>
+     
     </div>
-</div>
+    </div>
+</body>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

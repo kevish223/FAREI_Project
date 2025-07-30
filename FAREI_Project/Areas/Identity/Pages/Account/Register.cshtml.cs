@@ -3,6 +3,7 @@
 #nullable disable
 
 using AspNetCoreGeneratedDocument;
+using FAREI_Project.Data;
 using FAREI_Project.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,6 +31,7 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -38,7 +42,7 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,6 +50,7 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -69,6 +74,7 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
         public List<SelectListItem> Types { get; set; }
         public List<SelectListItem> Sites { get; set; }
         public List<SelectListItem> Supervisor { get; set; }
+        public List<SelectListItem> Dept { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -104,6 +110,9 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            
+            public string SelectedSupervisor { get; set; }
+
             [Required]
             [Display(Name = "Role")]
             public string Type { get; set; }
@@ -113,7 +122,10 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             public string Site { get; set; }
 
             [Display(Name = "Supervisor")]
-            public string Supervisor { get; set; }
+            public List<SelectListItem> SupervisorList { get; set; }
+
+            [Display(Name = "Dept")]
+            public string Dept { get; set; }
 
         }
 
@@ -135,23 +147,49 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
             {
                 new SelectListItem { Value = "St Pierre", Text = "St Pierre" },
                 new SelectListItem { Value = "Reduit", Text = "Reduit" },
-                new SelectListItem { Value = "Curepipe", Text = "Curepipe" },                 
+                new SelectListItem { Value = "Curepipe", Text = "Curepipe" },
                 new SelectListItem { Value = "Mapou", Text = "Mapou" },
-                new SelectListItem { Value = "Flacq", Text = "Flacq" },                
-                new SelectListItem { Value = "riviere des anguilles", Text = "riviere des anguilles" },                  
+                new SelectListItem { Value = "Flacq", Text = "Flacq" },
+                new SelectListItem { Value = "riviere des anguilles", Text = "riviere des anguilles" },
                 new SelectListItem { Value = "Plaisance", Text = "Plaisance" },
                 new SelectListItem { Value = "Vacoas", Text = "Vacoas" },
             };
-            Supervisor = new List<SelectListItem>
+            try
             {
-                new SelectListItem { Value = "KEVISH1@gmail.com", Text = "KEVISH1@gmail.com" },
-                
+                if (Input == null)
+                {
+                    Input = new InputModel();
+                }
+
+                Input.SupervisorList = await _context.Alluser.Where(m => m.Type == "Supervisor")
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.UserName,
+                        Text = u.UserName
+                    })
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading supervisor list: {ex.Message}");
+                throw;
+            }
+
+            Dept = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Livestock Research", Text = "Livestock Research" },
+                new SelectListItem { Value = "Crop Research", Text = "Crop Research" },
+                new SelectListItem { Value = "Extension and training", Text = "Extension and training" },
+                new SelectListItem { Value = "Technical Support", Text = "Technical Support" },
+                new SelectListItem { Value = "Administrative section", Text = "Administrative section" },
+                new SelectListItem { Value = "Internal Audit", Text = "Internal Audit" },
             };
-            
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            
             returnUrl ??= Url.Content("~/");
             Types = new List<SelectListItem>
             {
@@ -172,18 +210,45 @@ namespace FAREI_Project.Areas.Identity.Pages.Account
                 new SelectListItem { Value = "Plaisance", Text = "Plaisance" },
                 new SelectListItem { Value = "Vacoas", Text = "Vacoas" },
             };
-            Supervisor = new List<SelectListItem>
+            try
             {
-                new SelectListItem { Value = "KEVISH1@gmail.com", Text = "KEVISH1@gmail.com" },
+                if (Input == null)
+                {
+                    Input = new InputModel();
+                }
 
+                Input.SupervisorList = await _context.Alluser.Where(m => m.Type == "Supervisor")
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.UserName,
+                        Text = u.UserName
+                    })
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading supervisor list: {ex.Message}");
+                throw;
+            }
+            Dept = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Livestock Research", Text = "Livestock Research" },
+                new SelectListItem { Value = "Crop Research", Text = "Crop Research" },
+                new SelectListItem { Value = "Extension and training", Text = "Extension and training" },
+                new SelectListItem { Value = "Technical Support", Text = "Technical Support" },
+                new SelectListItem { Value = "Administrative section", Text = "Administrative section" },
+                new SelectListItem { Value = "Internal Audit", Text = "Internal Audit" },
             };
+            
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
                 user.Type = Input.Type;
                 user.Site = Input.Site;
-                user.Supervisor = Input.Supervisor;
+                user.Supervisor = Input.SelectedSupervisor;
+             
+                user.Dept = Input.Dept;
                 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

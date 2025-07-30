@@ -1,0 +1,56 @@
+﻿@using FAREI_Project.ViewModel
+@using FormRequest.Models
+@model RequestsViewModel
+@{
+}
+<head>
+    <link rel="stylesheet" href="~/css/Supervisor.css" />
+</head>
+<partial name="Navbar" />
+<div class="container">
+
+<table class="table">
+    <thead>
+        <tr>
+       
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)    
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormReqDbs.status)
+            </th>
+            <th></th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.FormReqDb)
+        {
+
+            var statusClass = StatusClass.GetStatusClass(item.status);
+            var status = item.status?.Trim().ToLower();
+            <tr id="row-@item.Id">
+                <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ResponsibleOfficer)</td>
+
+                <td>@Html.DisplayFor(modelItem => item.ProblemDescription)</td>
+
+                <td class="@statusClass status-cell" data-id="@item.Id">@item.status</td>
+
+                <td><a asp-action="DetailsSupervisorForm" asp-route-id="@item.Id">Details</a></td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+
+
+</div>

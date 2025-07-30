@@ -11,7 +11,7 @@
 <partial name="Navbar"></partial>
 <div class="container">
 <h1>ITO</h1>
-<table class="table" style="border: 1px solid black">
+<table class="table" >
     <thead>
         <tr>
           
@@ -36,8 +36,8 @@
             <th>                   
                 @Html.DisplayNameFor(Model => Model.FormReqDbs.status)                
             </th>
-            <th></th>
-            <th></th>
+            <th>confirmation</th>
+            <th>Details</th>
 
 
         </tr>
@@ -46,7 +46,8 @@
 @foreach (var item in Model.FormReqDb) {
         
             var statusClass = StatusClass.GetStatusClass(item.status);
-        <tr>
+            var status = item.status?.Trim().ToLower();
+        <tr id="row-@item.Id">
 
             <td>
                 @Html.DisplayFor(modelItem => item.Site)
@@ -73,13 +74,18 @@
             <td class="@statusClass status-cell" data-id="@item.Id">
                 @item.status
             </td>
+                    @if ( item.Pointer==2 || item.Pointer==3 || item.Pointer==6 || item.Pointer==8  ) {
+                        <td>                    
+                            <button class="btn btn-sm btn-success action-btn accept-btn" data-id="@item.Id" data-action="accept">Accept</button>                    
+                            <button class="btn btn-sm btn-danger action-btn reject-btn" data-id="@item.Id" data-action="reject">Reject</button>
+                        </td>
 
-            <td>                    
-                <button class="btn btn-sm btn-success action-btn accept-btn" data-id="@item.Id" data-action="accept" : "">Accept</button>                    
-                <button class="btn btn-sm btn-danger action-btn reject-btn" data-id="@item.Id" data-action="reject" : "">Reject</button>
-            </td>
-
-            <td>
+                    }
+                    else
+                    {
+                        <td>No request</td>
+                    }
+                    <td>
                 <a asp-action="repairedDetail" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>

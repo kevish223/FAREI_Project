@@ -8,6 +8,9 @@
 <partial name="Navbar"/>
 <div class="container">
 <h1>Supervisor</h1>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 <table class="table">
     <thead>
         <tr>
@@ -23,16 +26,20 @@
 @foreach (var item in Model.FormReqDb) {
         
             var statusClass = StatusClass.GetStatusClass(item.status);
-        <tr>
+            var status = item.status?.Trim().ToLower();
+                <tr id="row-@item.Id">
             <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>           
             <td>@Html.DisplayFor(modelItem => item.ResponsibleOfficer)</td>           
  
             <td>@Html.DisplayFor(modelItem => item.ProblemDescription)</td>
+            
                 <td class="@statusClass status-cell" data-id="@item.Id">@item.status</td>
+         
                 <td>
-                    <button class="btn btn-sm btn-success action-btn accept-btn" data-id="@item.Id" data-action="accept" : "">Accept</button>
-                    <button class="btn btn-sm btn-danger action-btn reject-btn" data-id="@item.Id" data-action="reject" : "">Reject</button>
+                            <button class="btn btn-sm btn-success action-btn accept-btn" data-id="@item.Id" data-action="accept" >Accept</button>
+                        <button class="btn btn-sm btn-danger action-btn reject-btn" data-id="@item.Id" data-action="reject"> Reject</button>
                 </td>
+            
             <td><a asp-action="DetailsSupervisorForm" asp-route-id="@item.Id">Details</a></td>
         </tr>
 }

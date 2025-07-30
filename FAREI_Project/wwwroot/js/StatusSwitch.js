@@ -41,10 +41,12 @@ $(document).on("click", ".action-btn", function () {
                 var newClass = getStatusClass(newStatus); 
 
                 statusCell.removeClass().addClass("status-cell " + newClass).text(response.newStatus);//removes existing sts->updates status+color
-
+              
                 var row = $("#row-" + id);
-                row.find(".accept-btn").prop("disabled", newStatus.includes("accept"));
-                row.find(".reject-btn").prop("disabled", newStatus.includes("reject"));
+                
+                
+                row.find(".accept-btn").prop("disabled", true);
+                row.find(".reject-btn").prop("disabled", true);
             } else {
                 alert(response.message || "Something went wrong.");
             }

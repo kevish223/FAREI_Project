@@ -19,6 +19,7 @@
                 "reject onsite" => "table-reject-onsite",
                 "complete" => "table-complete",
                 "repairing" => "table-repairing",
+                "start repairing" => "table-repairing",
                 "send back" => "table-sendback",
                 "pending" => "table-pending",
                 _ => "table-pending"

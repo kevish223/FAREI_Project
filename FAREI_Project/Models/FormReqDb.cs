@@ -33,7 +33,7 @@ namespace FormRequest.Models
 
         public string SerialNumber { get; set; }
 
-        public string Supervisor { get; set; }
+        public string? Supervisor { get; set; }
 
         public String? status { get; set; }
 
@@ -41,13 +41,10 @@ namespace FormRequest.Models
 
         public String? Feedback { get; set; }
 
-        public List<Registry>? Registries { get; set; } = new List<Registry>();
+     
         [ForeignKey("EquipmentID")]
         public EquipmentInventory? Equipments { get; set; } 
         public ITTreport? ITTReports { get; set; } 
-        public static implicit operator List<object>(FormReqDb? v)
-        {
-            throw new NotImplementedException();
-        }
+        public FormReqDb() { }
     }
 }

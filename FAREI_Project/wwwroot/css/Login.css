@@ -1,0 +1,54 @@
+﻿
+
+body {
+    background: #f6f5f7 !important;
+    
+    font-family: 'Montserrat', sans-serif !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+}
+.login-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 90vh !important;
+}
+.login-container {
+    background: #fff !important;
+    padding: 30px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    width: 100% !important;
+    max-width: 400px !important;
+}
+.navbar {
+    background-color:beige !important;
+}
+.login-form input {
+    background-color: #f1f1f1 !important;
+    border: none !important !important;
+    padding: 12px !important !important;
+    border-radius: 5px !important !important;
+}
+
+    .login-form input:focus {
+        outline: none !important;
+        box-shadow: 0 0 5px #007bff !important;
+    }
+
+button {
+    border-radius: 5px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    background-color: #FF4B2B !important;
+    color: #FFFFFF !important;
+}
+
+a {
+    color: #007bff !important;
+    text-decoration: none !important;
+}
+
+    a:hover {
+        text-decoration: underline !important;
+    }

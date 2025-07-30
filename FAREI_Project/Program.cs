@@ -2,6 +2,7 @@ using FAREI_Project.Data;
 using FAREI_Project.Models;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FAREI_Project
@@ -23,6 +24,9 @@ namespace FAREI_Project
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            //calls the EmailSender class
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -42,6 +46,7 @@ namespace FAREI_Project
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

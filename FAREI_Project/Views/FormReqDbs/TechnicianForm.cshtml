@@ -1,4 +1,5 @@
 ﻿@using FAREI_Project.ViewModel
+@using FormRequest.Models
 @model RequestsViewModel
 <head>
     <link rel="stylesheet" href="~/css/ITT.css" />
@@ -35,6 +36,9 @@
     </thead>
     <tbody>
 @foreach (var item in Model.FormReqDb) {
+            
+                var statusClass = StatusClass.GetStatusClass(item.status);
+                var status = item.status?.Trim().ToLower();
         <tr>
             
             <td>
@@ -52,12 +56,11 @@
             </td>
             <td>
                     @Html.DisplayFor(modelItem => item.SerialNumber)
-            </td>          
-            <td>
+            </td>
+                    <td class="@statusClass status-cell" data-id="@item.Id">
                     @Html.DisplayFor(modelItem => item.status)
             </td>
-            <td>
-               
+            <td>               
                     <a asp-action="TechnicianDetailsForm" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>

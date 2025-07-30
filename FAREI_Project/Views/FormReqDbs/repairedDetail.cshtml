@@ -68,8 +68,10 @@
 
 
     </dl>
-    <form asp-action="ITOstatus" method="post">
-        <input type="hidden" value="@Model.FormReqDbs.Id" name="id" />
+        @if (Model.FormReqDbs.Pointer == 2 || Model.FormReqDbs.Pointer == 3 || Model.FormReqDbs.Pointer == 6 || Model.FormReqDbs.Pointer == 8)
+        {
+            <form asp-action="ITOstatus" method="post">
+                <input type="hidden" value="@Model.FormReqDbs.Id" name="id"/>
 
 
         <input type="radio" class="form-check-input" name="Status" value="approve">
@@ -83,6 +85,7 @@
         </div>
         <input type="submit" value="Submit" class="btn btn-primary" />
     </form>
+    }
 </div>
 <div>
     <a asp-action="Index">Back to List</a>

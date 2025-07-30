@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Register";
 }
+<head>
+    <link rel="stylesheet" href="~/css/Login.css" />
+</head>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
@@ -13,66 +16,86 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                <partial name="_LoginPartial" />
+                
             </div>
         </div>
     </nav>
 </header>
-<h1 class="text-center"> @ViewData["Title"]</h1>
 
-<div class="center">
-    <div class="col-md-4 mx-auto">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2 class="text-center">Create a new account.</h2>
- 
+<div class="login-wrapper">
+<div class="login-container">
+
+        <h1 class="text-center mb-4"> @ViewData["Title"]</h1>
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="login-form">
+            
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
+            <div class="mb-3">
+            <label asp-for="Input.Email" class="form-label">Email</label>
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
+                
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            <div class=" mb-3">
+
+                <label asp-for="Input.Password" class="form-label">Password</label>
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
+                
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            <div class="mb-3">
+
+            <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            <div class=" mb-3">
+
+            <label asp-for="Input.Type" class="form-label">Confirm Role</label>
                 <select asp-for="Input.Type" class="form-control" autocomplete="new-Type" aria-required="true" asp-items="Model.Types" placeholder="Type">
                     <option value="">
 
                     </option>
                     </select>
-                <label asp-for="Input.Type">Confirm Role</label>
+                
                 <span asp-validation-for="Input.Type" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            <div class="mb-3">
+
+            <label asp-for="Input.Site" class="form-label">Confirm Site</label>
                 <select asp-for="Input.Site" class="form-control" autocomplete="new-Site" aria-required="true" asp-items="Model.Sites" placeholder="Sites">
                     <option value="">
 
                     </option>
                 </select>
-                <label asp-for="Input.Site">Confirm Site</label>
+                
                 <span asp-validation-for="Input.Site" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <select asp-for="Input.Supervisor" class="form-control" autocomplete="new-Supervisor" aria-required="true" asp-items="Model.Supervisor" placeholder="Supervisor">
+            <div class="mb-3">
+                <label asp-for="Input.SelectedSupervisor" class="form-label">Confirm Supervisor</label>
+                <select asp-for="Input.SelectedSupervisor" class="form-control" autocomplete="new-Supervisor" aria-required="true" asp-items="Model.Input.SupervisorList" placeholder="Supervisor">
                     <option value="">
 
                     </option>
                 </select>
-                <label asp-for="Input.Supervisor">Confirm Supervisor</label>
-                <span asp-validation-for="Input.Supervisor" class="text-danger"></span>
+                
+                <span asp-validation-for="Input.SelectedSupervisor"  class="text-danger"></span>
             </div>
-       
+            <div class="mb-3">
+                <label asp-for="Input.Dept" class="form-label">Confirm Dept</label>
+                <select asp-for="Input.Dept" class="form-control" autocomplete="new-Dept" aria-required="true" asp-items="Model.Dept" placeholder="Dept">
+                    <option value="">
+
+                    </option>
+                </select>
+
+                <span asp-validation-for="Input.Dept" class="text-danger"></span>
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
-    </div>
+   
 
+</div>
 </div>
 
 @section Scripts {

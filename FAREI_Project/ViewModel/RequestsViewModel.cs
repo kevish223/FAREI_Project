@@ -16,6 +16,7 @@ namespace FAREI_Project.ViewModel
         public EquipmentInventory? Inventory { get; set; }
         public Third_Party? Third_Party { get; set; }
         public ITTreport? ITTreport { get; set; }
+        public ApplicationUser? User { get; set; }
 
        
     }
