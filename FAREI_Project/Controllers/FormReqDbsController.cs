@@ -5,7 +5,6 @@ using FAREI_Project.ViewModel;
 using FormRequest.Models;
 using iText.Kernel.Pdf;
 using iText.Layout;
-
 using iText.Layout.Element;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +53,7 @@ namespace FAREI_Project.Controllers
            
         }
 
-        // GET: FormReqDbs
+        
         public async Task<IActionResult> Index()
         {
             var model = new RequestsViewModel
@@ -68,7 +67,7 @@ namespace FAREI_Project.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByEmailAsync(username);
-            var type=user.Type;
+            string? type = user.Type;
             if (type.Equals("Supervisor"))
             {
                 return RedirectToAction("SupervisorForm");
@@ -103,7 +102,7 @@ namespace FAREI_Project.Controllers
         {
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Where(j=>j.Supervisor.Contains(User.Identity.Name)&&j.status=="pending").ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Where(j => j.Supervisor.Contains(User.Identity.Name) && j.status == "pending").ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -301,6 +300,7 @@ namespace FAREI_Project.Controllers
             };
             return View(model);
         }
+        
         [HttpPost]
         public async Task<ActionResult> GeneratePdfAsync(DateTime date)
         {
@@ -341,7 +341,9 @@ namespace FAREI_Project.Controllers
 
                 return File(memoryStream.ToArray(), "application/pdf", "static-table.pdf");
             }
-        }
+        } 
+        
+        /*
         [HttpPost]
         public async Task<ActionResult> GeneratePdfDetailAsync(int ID)
         {
@@ -392,7 +394,7 @@ namespace FAREI_Project.Controllers
             p.SetMarginBottom(5);
             return p;
         }
-
+        */
         // GET: FormReqDbs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -401,8 +403,7 @@ namespace FAREI_Project.Controllers
                 return NotFound();
             }
 
-            var formReqDb = await _context.FormReqDb?
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var formReqDb = await _context.FormReqDb?.FirstOrDefaultAsync(m => m.Id == id);
             var allUsers = _context.Users.ToList();
             var viewModel = new RequestsViewModel
             {

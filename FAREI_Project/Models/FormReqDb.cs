@@ -8,40 +8,25 @@ namespace FormRequest.Models
     {
         [Key]
         public int Id { get; set; }
-
-        // General Form Details
-
         [DataType(DataType.Date)]
         public DateTime RequestDate { get; set; }
-
         [Required]
         public string Site { get; set; }
-
         [Required]
         public string Department { get; set; }
-
-        [Required(ErrorMessage = "contact phone is required")]
+        [Required]
         public string ResponsibleOfficer { get; set; }
-
-        [Required(ErrorMessage = "contact phone is required")]
+        [Required]
         public int ContactPhone { get; set; }
-
-        // Equipment Section (1 entry for now — add related tables later if needed)
         public int Pointer { get; set; }
-
+        [Required]
         public string ProblemDescription { get; set; }
-
+        [Required]
         public string SerialNumber { get; set; }
-
         public string? Supervisor { get; set; }
-
         public String? status { get; set; }
-
         public String? remarks { get; set; }
-
         public String? Feedback { get; set; }
-
-     
         [ForeignKey("EquipmentID")]
         public EquipmentInventory? Equipments { get; set; } 
         public ITTreport? ITTReports { get; set; } 

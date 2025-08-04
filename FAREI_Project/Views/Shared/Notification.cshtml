@@ -1,0 +1,24 @@
+﻿@using FAREI_Project.ViewModel
+
+@model RequestsViewModel
+@{
+    var request = Model.FormReqDb.Where(m => m.ResponsibleOfficer == "KEVISH@gmail.com");
+}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="notifBell" href="#" data-bs-toggle="dropdown">
+        🔔 <span class="badge bg-danger">@request.Count()</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifBell">
+        @if (@request.Count()>0)
+        {
+            foreach (var notif in request)
+            {
+                <li class="dropdown-item ">@notif.ResponsibleOfficer</li>
+            }
+        }
+        else
+        {
+            <li class="dropdown-item text-muted">No notifications</li>
+        }
+    </ul>
+</li>
