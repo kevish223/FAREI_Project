@@ -22,8 +22,13 @@ body {
     max-width: 400px !important;
 }
 .navbar {
-    background-color:beige !important;
+    background-color:bisque !important;
+    color:black !important;
 }
+    .navbar a,
+    .navbar-brand {
+        color: white !important;
+    }
 .login-form input {
     background-color: #f1f1f1 !important;
     border: none !important !important;

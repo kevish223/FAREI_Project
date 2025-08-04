@@ -6,8 +6,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-FAREI_Project-500089cb-202c-4f9a-a7e9-d7c7ef6a54c7</UserSecretsId>
   </PropertyGroup>
-
+ 
+	 <PropertyGroup>    
+		 <OutputType>WinExe</OutputType>    
+		 <TargetFramework>net8.0-windows</TargetFramework>
+		 <UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+	
   <ItemGroup>
+    <PackageReference Include="itext.bouncy-castle-adapter" Version="9.2.0" />
+    <PackageReference Include="itext7" Version="9.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.17" />
@@ -15,7 +23,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.17" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-    <PackageReference Include="Syncfusion.Pdf.AspNet.Mvc5" Version="30.1.41" />
+    <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.1" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="25.2.0" />
+
   </ItemGroup>
 
 </Project>

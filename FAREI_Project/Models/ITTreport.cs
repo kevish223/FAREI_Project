@@ -11,5 +11,6 @@ namespace FAREI_Project.Models
         public int? FormReqDb { get; set; }
         public String? SerialNumber { get; set; }
         public String? Report { get; set; }
+        public String? ITT_remark{get; set;}
     }
 }

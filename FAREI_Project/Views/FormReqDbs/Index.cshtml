@@ -3,6 +3,8 @@
 @model RequestsViewModel
 <head>
     <link rel="stylesheet" href="~/css/User.css" />
+    <link href="//cdn.datatables.net/2.3.2/css/dataTables.dat"/>
+    <link href="//cdn.datatables.net/2.3.2/js/dataTables.min.js">
 </head>
 @{
 
@@ -69,10 +71,12 @@
             <tr>
                 <th>RequestDate</th>
                 <th>ResponsibleOfficer</th>
-                <th>Status</th>
+               
                 <th>Serial number</th>
                 <th>Equipment type</th>
                 <th>ProblemDescription</th>
+                        
+                <th>Status</th>
                 <th></th>
             </tr>
         </thead>
@@ -83,12 +87,15 @@
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.ResponsibleOfficer)</td>
-                    <td class="@statusClass status-cell" data-id="@item.Id">@Html.DisplayFor(modelItem => item.status)</td>
+                    
                     <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Equipments.EquipmentType)
                     </td>
+                    <td>@Html.DisplayFor(modelItem=>item.remarks)</td>
                     <td >@Html.DisplayFor(modelItem => item.ProblemDescription)</td>
+                            
+                    <td class="@statusClass status-cell" data-id="@item.Id">@Html.DisplayFor(modelItem => item.status)</td>
                     <td><a asp-action="Details" asp-route-id="@item.Id">Details</a></td>
                 </tr>
             }

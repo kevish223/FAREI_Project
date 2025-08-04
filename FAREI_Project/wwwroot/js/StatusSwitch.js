@@ -11,6 +11,7 @@
         case "accept transit": return "table-accept-transit";
         case "reject transit": return "table-reject-transit";
         case "accept onsite": return "table-accept-onsite";
+        case "start repairing": return "table-repairing";
         case "reject onsite": return "table-reject-onsite";
         case "complete": return "table-complete";
         case "repairing": return "table-repairing";
@@ -25,9 +26,10 @@ $(document).on("click", ".action-btn", function () {
     var action = $(this).data("action");
     var button = $(this);
 
-    if (action == "reject") {
-        if (!confirm("Are you sure you want to reject this request?"))
-            return;
+
+    if (!confirm(`Are you sure you want to ${action} this request?`)) {
+        // If clicked Cancel, do nothing — button stays enabled
+        return;
     }//confirmation msg according to action
 
     $.ajax({

@@ -1,0 +1,105 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+@{
+    var ID = @Html.DisplayFor(model => model.FormReqDbs.Id);
+}
+<head>
+    <link rel="stylesheet" href="~/css/User.css" />
+</head>
+<partial name="Navbar" />
+<div class="container">
+    <div class="row">
+
+
+
+        <div class="col-md-6 border-end pe-4">
+        <h4>FormReqDb</h4>
+            
+        <dl class="row">
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.FormReqDbs.RequestDate)
+            </dd>
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.Site)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.FormReqDbs.Site)
+            </dd>
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.FormReqDbs.Department)
+            </dd>
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
+            </dd>
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
+            </dd>
+            <dt >
+                @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FormReqDbs.SerialNumber)
+            </dd>
+
+        </dl>
+
+    </div>
+        <div class="col-md-6 ps-4">
+            <h4>Equipment Details</h4>
+            <dl class="row">
+
+                <dt>Serial Number</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.SerialNumber)</dd>
+
+                <dt>Equipment Type</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentType)</dd>
+
+                <dt>Equipment name</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentName)</dd>
+
+                <dt>Problem Description</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)</dd>
+
+                
+            </dl>
+        </div>
+        <div>
+
+            @using (Html.BeginForm("GeneratePdfDetail", "FormReqDbs", FormMethod.Post, new { target = "_blank" }))
+
+            {
+                <div class="form-group">
+                    
+                    <input type="hidden" name="ID" id="ID" value="@ID" class="form-control" required />
+                </div>
+                <div>
+                    <input type="submit" value="Generate PDF" class="btn btn-primary" />
+                </div>
+            }
+        </div>
+    <div>
+
+        <a asp-action="Index">Back to List</a>
+    </div>
+    </div>
+</div>
+

@@ -21,6 +21,9 @@
                 @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
             </th>
             <th>
+                    @Html.DisplayNameFor(model => model.FormReqDbs.remarks)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.FormReqDbs.status)
             </th>
         
@@ -39,6 +42,9 @@
 
             <td>
                 @Html.DisplayFor(modelItem => item.ProblemDescription)
+            </td>                    
+            <td>            
+                @Html.DisplayFor(modelItem => item.remarks)                
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.status) 

@@ -102,9 +102,19 @@
     {
         <div class="mb-3">
             <form asp-action="ChangeStatus" method="post">
-                <input type="hidden" name="id" value="@Model.FormReqDbs.Id"></input>
-                <input type="radio" class="form-check-input" name="Status" value=3><label class="form-check-label"> Onsite</label><br>
+                <input type="hidden" name="id" value="@Model.FormReqDbs.Id">
+                    <div style="margin:10px !important;">
+                <input type="radio" class="form-check-input" name="Status" value=3><label class="form-check-label"> Onsite</label><br>    
                 <input type="radio" class="form-check-input" name="Status" value=4><label class="form-check-label"> Transit</label><br>
+                </div>
+                   
+                        
+                    <div style="margin:10px !important;">
+                        <label>Remarks:</label>
+                        <textarea name="Remarks" class="form-control"></textarea>
+                        <span class="text-danger"></span>
+                    </div>
+                   
                 <input type="submit" value="Submit" class="btn btn-primary" />
             </form>
         </div>

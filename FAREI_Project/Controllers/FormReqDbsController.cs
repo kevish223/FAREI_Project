@@ -1,21 +1,31 @@
 ﻿using Azure.Core;
 using FAREI_Project.Data;
 using FAREI_Project.Models;
-
 using FAREI_Project.ViewModel;
 using FormRequest.Models;
+using iText.Kernel.Pdf;
+using iText.Layout;
+
+using iText.Layout.Element;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using MigraDoc.Rendering;
 using Mono.TextTemplating;
 using Newtonsoft.Json.Linq;
+using SelectPdf;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Security.Policy;
+using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Registry = FAREI_Project.Models.Registry;
 
 namespace FAREI_Project.Controllers
@@ -220,12 +230,12 @@ namespace FAREI_Project.Controllers
             {
                 var Supervisor = new RequestsViewModel
                 {
-                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(j => j.Supervisor == name).ToListAsync(),
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(j => j.Supervisor == name || j.ResponsibleOfficer==name).ToListAsync(),
                     Registries = await _context.Registries.ToListAsync(),
                     AllUsers = _userManager.Users.ToList()
                 };
                 return View(Supervisor);
-            }else if (user.Type== "Technician" || user.Type== "ITO") 
+            }else if (user.Type== "Technician" || user.Type== "ITO" || user.Type == "Admin") 
             {
                 var model = new RequestsViewModel
                 {
@@ -254,6 +264,8 @@ namespace FAREI_Project.Controllers
                 return RedirectToAction("Index");
             }
             var user = await _userManager.FindByEmailAsync(username);
+            var request=_context.FormReqDb.ToArray();
+            int length =request.Length;
             var Site = user.Site;
             var model = new RequestsViewModel
             {
@@ -279,6 +291,7 @@ namespace FAREI_Project.Controllers
                 }
             }
 
+
            var newFormDBReq = await _context.FormReqDb.Where(j => j.status == "Complete").ToListAsync();
             var model = new RequestsViewModel
             {
@@ -287,6 +300,97 @@ namespace FAREI_Project.Controllers
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
+        }
+        [HttpPost]
+        public async Task<ActionResult> GeneratePdfAsync(DateTime date)
+        {
+            var Request = await _context.FormReqDb.Where(m => m.RequestDate < date).Include(j => j.Equipments).ToListAsync();
+            using (var memoryStream = new MemoryStream())
+            {
+                var writer = new iText.Kernel.Pdf.PdfWriter(memoryStream);
+                var pdf = new iText.Kernel.Pdf.PdfDocument(writer);
+                var document = new iText.Layout.Document(pdf);
+
+                document.Add(new iText.Layout.Element.Paragraph("Product List")                    
+                    .SetFontSize(16)
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER));
+
+                // Create table with 3 columns
+                var table = new iText.Layout.Element.Table(6, true);
+
+                // Header row
+                table.AddHeaderCell("Request date");
+                table.AddHeaderCell("Responsible Officer");
+                table.AddHeaderCell("Supervisor");
+                table.AddHeaderCell("Equipment Name");
+                table.AddHeaderCell("Equipment type");
+                table.AddHeaderCell("Serial number");
+
+                foreach (var item in Request) {
+                    
+                    table.AddCell(item.RequestDate.ToString());
+                    table.AddCell(item.ResponsibleOfficer);
+                    table.AddCell(item?.Supervisor ?? "");
+                    table.AddCell(item.Equipments.EquipmentName);
+                    table.AddCell(item.Equipments.EquipmentType);
+                    table.AddCell(item.Equipments.SerialNumber);
+                }
+                // Add table to document
+                document.Add(table);
+                document.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", "static-table.pdf");
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> GeneratePdfDetailAsync(int ID)
+        {
+            var Request = await _context.FormReqDb.Include(m=>m.Equipments).FirstOrDefaultAsync(m=>m.Id==ID);
+            using (var memoryStream = new MemoryStream())
+            {
+                var writer = new iText.Kernel.Pdf.PdfWriter(memoryStream);
+                var pdf = new iText.Kernel.Pdf.PdfDocument(writer);
+                var document = new iText.Layout.Document(pdf);
+
+                var rootTable = new iText.Layout.Element.Table(2);
+                rootTable.SetWidth(iText.Layout.Properties.UnitValue.CreatePercentValue(100));
+
+                var leftCell = new iText.Layout.Element.Cell();
+                leftCell.SetBorder(iText.Layout.Borders.Border.NO_BORDER);
+
+
+                leftCell.Add(new Paragraph("FormReqDb").SetFontSize(14).SetMarginBottom(10));
+                leftCell.Add(KeyValue("RequestDate", "7/29/2025"));
+                leftCell.Add(KeyValue("Site", "Reduit"));
+                leftCell.Add(KeyValue("Department", "Technical Support"));
+                leftCell.Add(KeyValue("ResponsibleOfficer", "KEVISH1@gmail.com"));
+                leftCell.Add(KeyValue("ContactPhone", "52704432"));
+                leftCell.Add(KeyValue("ProblemDescription", "burning"));
+                leftCell.Add(KeyValue("SerialNumber", "CND23502QR"));
+
+                var rightCell = new Cell().SetBorder(iText.Layout.Borders.Border.NO_BORDER);
+                rightCell.Add(new Paragraph("Equipment Details").SetFontSize(14).SetMarginBottom(10));
+                rightCell.Add(KeyValue("Serial Number", "CND23502QR"));
+                rightCell.Add(KeyValue("Equipment Type", "Laptop"));
+                rightCell.Add(KeyValue("Equipment name", "FAREI-CROPEXT"));
+                rightCell.Add(KeyValue("Problem Description", "burning"));
+
+                rootTable.AddCell(leftCell);
+                rootTable.AddCell(rightCell);
+
+                document.Add(rootTable);
+                document.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", $"{Request.Id}-document.pdf");
+            }
+        }
+        private Paragraph KeyValue(string label, string value)
+        {
+            var p = new Paragraph();
+            p.Add(new Text(label + ": "));
+            p.Add(new Text(value ?? ""));
+            p.SetMarginBottom(5);
+            return p;
         }
 
         // GET: FormReqDbs/Details/5
@@ -299,6 +403,28 @@ namespace FAREI_Project.Controllers
 
             var formReqDb = await _context.FormReqDb?
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var allUsers = _context.Users.ToList();
+            var viewModel = new RequestsViewModel
+            {
+                FormReqDbs = formReqDb,
+                AllUsers = allUsers
+            };
+            if (formReqDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> ReportDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var formReqDb = await _context.FormReqDb?.Include(m=>m.Equipments).FirstOrDefaultAsync(m => m.Id == id);
             var allUsers = _context.Users.ToList();
             var viewModel = new RequestsViewModel
             {
@@ -640,47 +766,6 @@ namespace FAREI_Project.Controllers
 
             return View(model);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitThirdPartyForm(RequestsViewModel model,String? Status,String? remarks)
-        {
-
-            if (ModelState.IsValid)
-            {
-                // Example: create new FormReqDb object to save
-                var newForm = model.Third_Party;
-                var request= await _context.FormReqDb.FindAsync(newForm.FormReqDbID);
-                if (request.status== "Sent to third party")
-                {
-                    request.remarks=remarks;
-                    request.status ="approve";
-                    _context.SaveChanges();
-                    return RedirectToAction("ITOForm");
-                }
-
-                // Optionally set extra fields:
-                if (Status== "approve")
-                {
-                    _context.Third_Parties.Add(newForm);
-                    request.status ="Sent to third party";
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    request.status="Rejected";
-                    _context.SaveChanges();
-                }
-
-
-
-                    return RedirectToAction("ITOForm");
-            }
-
-            // If invalid → reload page and pass Users list again
-            model.AllUsers = _context.Users.ToList();
-
-            return RedirectToAction("ITOForm");
-        }
         [HttpGet]
         public async Task<IActionResult> GetFormRequests(string site, string department, string type)
         {
@@ -745,7 +830,7 @@ namespace FAREI_Project.Controllers
             return View(formReqDb);
         }
         [HttpGet("FormReqDbs/EditUser/{UserName}")]
-        public async Task<IActionResult> EditUser(String? UserName)
+        public async Task<IActionResult> EditUser(string? UserName)
         {
             if (UserName == null)
             {
@@ -768,7 +853,7 @@ namespace FAREI_Project.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> editUser(String userName,String Supervisor,String Site,String dept)
+        public async Task<IActionResult> editUser(string userName,string Supervisor,string Site,string dept)
         {
             Console.WriteLine($"Searching for username: {userName}");
             var Alluser = await _context.Alluser.FirstOrDefaultAsync(m => m.UserName == userName);
@@ -792,7 +877,7 @@ namespace FAREI_Project.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangeStatus(int id, int Status)
+        public async Task<IActionResult> ChangeStatus(int id, int Status,string? Remarks)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             if (formReqDb == null)
@@ -814,6 +899,7 @@ namespace FAREI_Project.Controllers
             {
                 formReqDb.status = "Onsite request";
                 formReqDb.Pointer += 2;//3
+                formReqDb.remarks= Remarks ?? "";
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TechnicianForm));
             }
@@ -821,6 +907,7 @@ namespace FAREI_Project.Controllers
             {
                 formReqDb.status = "Transit request";
                 formReqDb.Pointer += 1;//2
+                formReqDb.remarks = Remarks ?? "";
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TechnicianForm));
             }
@@ -846,7 +933,7 @@ namespace FAREI_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitFeedback(int id, String feedback)
+        public async Task<IActionResult> SubmitFeedback(int id, string feedback)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             if (formReqDb == null)
@@ -878,7 +965,7 @@ namespace FAREI_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ITOstatus(int id,String Status,String Remarks)
+        public async Task<IActionResult> ITOstatus(int id,string Status,string Remarks)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             var registry =  _context.Registries.Any(k => k.FormReqDbId == id);
@@ -1036,7 +1123,7 @@ namespace FAREI_Project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Report(int id,String SerialNumber, String Status,String Remarks,RequestsViewModel model)
+        public async Task<IActionResult> Report(int id,string SerialNumber, string Status,string Remarks,RequestsViewModel model)
         {
             var formReqDb = await _context.FormReqDb.FindAsync(id);
             var Equipment = await _context.Equipment.FirstOrDefaultAsync(f => f.SerialNumber==formReqDb.SerialNumber);
@@ -1110,24 +1197,24 @@ namespace FAREI_Project.Controllers
                 return NotFound();
             }
 
-            if (formReqDb.Pointer == 0)
+            if (formReqDb.Pointer == atNewRequest)
                 {
                 formReqDb.status = "rejected";
-                Registry.Remarks = Remarks;
+                Registry.Remarks += " 2. "+ Remarks;
                 }
-                else if (formReqDb.Pointer == 4)
+                else if (formReqDb.Pointer == atTransitting)
                 {
                     formReqDb.status = "Repairing";                
                     Registry.IsValid = true;
-                    Registry.Remarks = Remarks;
+                    Registry.Remarks += " 2. " + Remarks;
                     formReqDb.Pointer += 1;//5
                 } 
-                else if (formReqDb.Pointer == 9)            
+                else if (formReqDb.Pointer == atReturn)            
                 {                
                 formReqDb.status = "Complete";
                 formReqDb.RequestDate =DateTime.Now;
                 Registry.IsValid = !Registry.IsValid;
-                Registry.Remarks = Remarks;
+                Registry.Remarks += " 2. " + Remarks;
                 }
 
 

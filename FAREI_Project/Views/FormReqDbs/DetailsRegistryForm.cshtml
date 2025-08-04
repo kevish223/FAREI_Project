@@ -69,7 +69,11 @@
 <div>
     <form asp-action="SubmitRegistry" method="post">
         <input asp-for="Registry.FormReqDbId" value="@Model.FormReqDbs.Id" type="hidden"/>
-
+            <div>
+                <label asp-for="Registry.Remarks"></label>
+                <textarea asp-for="Registry.Remarks" class="form-control"></textarea>
+                <span asp-validation-for="Registry.Remarks" class="text-danger"></span>
+            </div>
         <div>
             <label>Time</label>
             <input asp-for="Registry.MovementDate" class="form-control" />
