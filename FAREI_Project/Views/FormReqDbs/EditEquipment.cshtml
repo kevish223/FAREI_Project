@@ -5,65 +5,63 @@
 </head>
 <partial name="Navbar"></partial>
 <div class="container">
-<h4>EquipmentInventory</h4>
-<hr />
-
-        <form asp-action="CreateEquipment">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="row">
-                    <div class="col-md-4 form-group">
-                <label asp-for="Inventory.EquipmentName" class="control-label"></label>
-                <input asp-for="Inventory.EquipmentName" class="form-control" />
-                <span asp-validation-for="Inventory.EquipmentName" class="text-danger"></span>
-            </div>
-                    <div class="col-md-4 form-group">
-                <label asp-for="Inventory.SerialNumber" class="control-label"></label>
-                <input asp-for="Inventory.SerialNumber" class="form-control" />
-                <span asp-validation-for="Inventory.SerialNumber" class="text-danger"></span>
-            </div>
-                    <div class="col-md-4 form-group">
-                <label asp-for="Inventory.EquipmentType" class="control-label"></label>
-                <select asp-for="Inventory.EquipmentType" class="form-control" >
-                    <option> CPU </option>
-                    <option> Monitor </option>
-                    <option>Mouse</option>
-                    <option>Key board</option>
-                    <option>printer</option>
-                    <option>Scanner</option>
-                    <option>Laptop</option>
-                </select>
-                <span asp-validation-for="Inventory.EquipmentType" class="text-danger"></span>
-            </div>
-            </div>
-
-                <div class="row">
-                    <div class="col-md-4 form-group">
-                <label asp-for="Inventory.Site" class="control-label"></label>
-                <select asp-for="Inventory.Site" class="form-control" >
-                    <option> St Pierre </option>
-                    <option> Reduit </option>
-                    <option>Curepipe</option>
-                    <option>Mapou</option>
-                    <option>Flacq</option>
-                    <option>riviere des anguilles</option>
-                    <option>Plaisance</option>
-                    <option>Vacoas</option>
-                </select>
-                <span asp-validation-for="Inventory.Site" class="text-danger"></span>
-            </div>
-                    <div class="col-md-4 form-group">
-                <label asp-for="Inventory.Department" class="control-label"></label>
-                <select asp-for="Inventory.Department" class="form-control" >
+    <h4>EquipmentInventory</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="EditEquipment" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Inventory.EquipmentName" class="control-label"></label>
+                    <input asp-for="Inventory.EquipmentName" class="form-control" />
+                    <span asp-validation-for="Inventory.EquipmentName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Inventory.SerialNumber" class="control-label"></label>
+                    <input asp-for="Inventory.SerialNumber" class="form-control" />
+                    <span asp-validation-for="Inventory.SerialNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Inventory.EquipmentType" class="control-label"></label>
+                    <select asp-for="Inventory.EquipmentType" class="form-control">
+                        <option> CPU </option>
+                        <option> Monitor </option>
+                        <option>Mouse</option>
+                        <option>Key board</option>
+                        <option>printer</option>
+                        <option>Scanner</option>
+                        <option>Laptop</option>
+                    </select>
+                    <span asp-validation-for="Inventory.EquipmentType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Inventory.Site" class="control-label"></label>
+                    <select asp-for="Inventory.Site" class="form-control">
+                        <option> St Pierre </option>
+                        <option> Reduit </option>
+                        <option>Curepipe</option>
+                        <option>Mapou</option>
+                        <option>Flacq</option>
+                        <option>riviere des anguilles</option>
+                        <option>Plaisance</option>
+                        <option>Vacoas</option>
+                    </select>
+                    <span asp-validation-for="Inventory.Site" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Inventory.Department" class="control-label"></label>
+                    <select asp-for="Inventory.Department" class="form-control">
                         <option>Livestock Research</option>
                         <option>Crop Research</option>
                         <option>Extension and training</option>
                         <option>Technical Support</option>
                         <option>Administrative section</option>
                         <option>Internal Audit</option>
-                </select>
-                <span asp-validation-for="Inventory.Department" class="text-danger"></span>
-            </div>
-                    <div class="col-md-4 form-group">
+                    </select>
+                    <span asp-validation-for="Inventory.Department" class="text-danger"></span>
+                </div>
+                <div class="form-group"></div>
+                <div class="form-group">
                     <label asp-for="Inventory.Drives" class="control-label"></label>
                     <select asp-for="Inventory.Drives" class="form-control">
                         <option>SSD</option>
@@ -71,60 +69,50 @@
                     </select>
                     <span asp-validation-for="Inventory.Drives" class="text-danger"></span>
                 </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.capacity" class="control-label"></label>
                     <input asp-for="Inventory.capacity" class="form-control" />
                     <span asp-validation-for="Inventory.capacity" class="text-danger"></span>
                 </div>
-                    <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.memory" class="control-label"></label>
                     <input asp-for="Inventory.memory" class="form-control" />
                     <span asp-validation-for="Inventory.memory" class="text-danger"></span>
                 </div>
-                    <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.operatingSystem" class="control-label"></label>
                     <input asp-for="Inventory.operatingSystem" class="form-control" />
                     <span asp-validation-for="Inventory.operatingSystem" class="text-danger"></span>
                 </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.OSkey" class="control-label"></label>
                     <input asp-for="Inventory.OSkey" class="form-control" />
                     <span asp-validation-for="Inventory.OSkey" class="text-danger"></span>
                 </div>
-                    <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.Office" class="control-label"></label>
                     <input asp-for="Inventory.Office" class="form-control" />
                     <span asp-validation-for="Inventory.Office" class="text-danger"></span>
                 </div>
-                    <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.supplier" class="control-label"></label>
                     <input asp-for="Inventory.supplier" class="form-control" />
                     <span asp-validation-for="Inventory.supplier" class="text-danger"></span>
                 </div>
-                </div>
-
-                <div class="row">
-            <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.User" class="control-label"></label>
                     <input asp-for="Inventory.User" class="form-control" />
                     <span asp-validation-for="Inventory.User" class="text-danger"></span>
                 </div>
-            <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.barcode" class="control-label"></label>
                     <input asp-for="Inventory.barcode" class="form-control" />
                     <span asp-validation-for="Inventory.barcode" class="text-danger"></span>
                 </div>
-            <div class="col-md-4 form-group">
+                <div class="form-group">
                     <label asp-for="Inventory.DateOfPurchase" class="control-label"></label>
                     <input asp-for="Inventory.DateOfPurchase" class="form-control" />
                     <span asp-validation-for="Inventory.DateOfPurchase" class="text-danger"></span>
-                </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="Inventory.amount" class="control-label"></label>
@@ -138,15 +126,17 @@
                 </div>
                 <div class="form-group">
                 </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 
 
-
-
+</div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

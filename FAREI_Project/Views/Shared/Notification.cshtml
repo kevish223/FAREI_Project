@@ -1,19 +1,52 @@
 ﻿@using FAREI_Project.ViewModel
 
 @model RequestsViewModel
+
 @{
-    var request = Model.FormReqDb.Where(m => m.ResponsibleOfficer == "KEVISH@gmail.com");
+    var user = Model.AllUsers.FirstOrDefault(m=>m.UserName==User.Identity.Name);   
+    var UserRole=user.Type;
 }
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" id="notifBell" href="#" data-bs-toggle="dropdown">
-        🔔 <span class="badge bg-danger">@request.Count()</span>
+        🔔 <span class="badge bg-danger">@Model.Notification.Count()</span>
     </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifBell">
-        @if (@request.Count()>0)
+        @if (@Model.Notification.Count() > 0)
         {
-            foreach (var notif in request)
+            @if (UserRole == "User")
             {
-                <li class="dropdown-item ">@notif.ResponsibleOfficer</li>
+
+                foreach (var notif in Model.Notification)
+                {
+                    <li class="dropdown-item "><a asp-action="Details" asp-route-id="@notif.Id" style="color:black !important;">@notif.ResponsibleOfficer status : @notif.status</a></li>
+                }
+            }else if(UserRole == "Supervisor")
+            {
+                foreach (var notif in Model.Notification)
+                {
+                    <li class="dropdown-item "><a asp-action="DetailsSupervisorForm" asp-route-id="@notif.Id" style="color:black !important;">@notif.ResponsibleOfficer status : @notif.status</a></li>
+                }
+            }
+            else if (UserRole == "Technician")
+            {
+                foreach (var notif in Model.Notification)
+                {
+                    <li class="dropdown-item "><a asp-action="TechnicianDetailsForm" asp-route-id="@notif.Id" style="color:black !important;">@notif.ResponsibleOfficer status : @notif.status</a></li>
+                }
+            }
+            else if (UserRole == "ITO")
+            {
+                foreach (var notif in Model.Notification)
+                {
+                    <li class="dropdown-item "><a asp-action="repairedDetail" asp-route-id="@notif.Id" style="color:black !important;">@notif.ResponsibleOfficer status : @notif.status</a></li>
+                }
+            }
+            else if (UserRole == "Registry")
+            {
+                foreach (var notif in Model.Notification)
+                {
+                    <li class="dropdown-item "><a asp-action="DetailsRegistryForm" asp-route-id="@notif.Id" style="color:black !important;">@notif.ResponsibleOfficer status : @notif.status</a></li>
+                }
             }
         }
         else

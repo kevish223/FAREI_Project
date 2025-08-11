@@ -5,69 +5,60 @@
 </head>
 <partial name="Navbar"></partial>
 <div class="container">
-<div>
+<div class="row">
+        <div class="col-md-6 ">
     <h4>FormReqDb</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.Site)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.Site)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.Department)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.Department)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
-        </dd>
-            
-        <dt class="col-sm-2">        
-            @Html.DisplayNameFor(model => model.Inventory.SerialNumber)            
-        </dt>        
-        <dd class="col-sm-10">        
-            @Html.DisplayFor(model => model.Inventory.SerialNumber)            
-        </dd>            
-        <dt class="col-sm-2">                
-            @Html.DisplayNameFor(model => model.Inventory.EquipmentName)            
-        </dt>            
-        <dd class="col-sm-10">         
-            @Html.DisplayFor(model => model.Inventory.EquipmentName)    
-        </dd>            
-        <dt class="col-sm-2">             
-            @Html.DisplayNameFor(model => model.Inventory.EquipmentType)           
-        </dt>          
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Inventory.EquipmentType)                        
-        </dd>
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ITTreport.Report)
-        </dt> 
-        <dd class="col-sm-10">        
-            @Html.DisplayFor(model => model.ITTreport.Report)            
-        </dd>
+            <dl class="row">
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FormReqDbs.Site)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FormReqDbs.Site)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FormReqDbs.Department)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FormReqDbs.Department)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
+                </dd>
 
 
-    </dl>
+
+            </dl>
+    </div>
+        <div class="col-md-6 ">
+            <h4>Equipment Details</h4>
+            <dl class="row">
+
+                <dt>Serial Number</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.SerialNumber)</dd>
+
+                <dt>Equipment Type</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentType)</dd>
+
+                <dt>Equipment name</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentName)</dd>
+
+                <dt>Problem Description</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)</dd>
+
+
+            </dl>
+        </div>
         @if (Model.FormReqDbs.Pointer == 2 || Model.FormReqDbs.Pointer == 3 || Model.FormReqDbs.Pointer == 6 || Model.FormReqDbs.Pointer == 8)
         {
             <form asp-action="ITOstatus" method="post">

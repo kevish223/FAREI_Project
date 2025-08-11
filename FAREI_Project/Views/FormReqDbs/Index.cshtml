@@ -3,7 +3,7 @@
 @model RequestsViewModel
 <head>
     <link rel="stylesheet" href="~/css/User.css" />
-    <link href="//cdn.datatables.net/2.3.2/css/dataTables.dat"/>
+    <link href="//cdn.datatables.net/2.3.2/css/dataTables.dat" />
     <link href="//cdn.datatables.net/2.3.2/js/dataTables.min.js">
 </head>
 @{
@@ -20,15 +20,9 @@
         Type = "default";
     }
     else
-    {        
-        @foreach (var User in Model.AllUsers)
-        {
-            if (username.Equals(User.UserName))
-            {
-                Type = User.Type;
-                break;
-            }
-        }
+    {
+        var FindUser = Model.AllUsers.Find(m=>m.UserName==username);
+        Type = FindUser.Type;
     }
 }
 @if (Type.Equals("default"))
@@ -60,21 +54,21 @@
 {
     <partial name="Navbar"></partial>
     <div class="container">
-    <h1 class="mt-0">User</h1>
-
-    <p> 
-        <a asp-action="Create">Create New</a>
-    </p>
+        <div style="display: flex; align-items: center; justify-content: flex-start;">
+            <h1>Request page- </h1>
+            <a asp-action="Create">Create New</a>
+        </div>
     <div class="TableMargin">
-    <table class="table">
+            <table class="table" id="userTable">
         <thead>
             <tr>
                 <th>RequestDate</th>
-                <th>ResponsibleOfficer</th>
+                <th>Responsible Officer</th>
                
                 <th>Serial number</th>
                 <th>Equipment type</th>
-                <th>ProblemDescription</th>
+                <th>remarks</th>
+                <th>Problem Description</th>
                         
                 <th>Status</th>
                 <th></th>

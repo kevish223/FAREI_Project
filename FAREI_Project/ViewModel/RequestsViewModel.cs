@@ -10,6 +10,7 @@ namespace FAREI_Project.ViewModel
         public List<ApplicationUser>? AllUsers { get; set;}
         public List<Registry>? Registries { get; set; }
         public List<EquipmentInventory>? Inventories { get; set; }
+        public EquipmentInventory? Equipment { get; set; }
         public List<ITTreport>? ITTreports { get; set; }
         public FormReqDb? FormReqDbs { get; set; }
         public Registry? Registry{ get; set; }
@@ -17,6 +18,7 @@ namespace FAREI_Project.ViewModel
         public Third_Party? Third_Party { get; set; }
         public ITTreport? ITTreport { get; set; }
         public ApplicationUser? User { get; set; }
+        public List<FormReqDb>? Notification {  get; set; }
 
        
     }

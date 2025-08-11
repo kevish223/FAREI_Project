@@ -6,65 +6,74 @@
 <partial name="Navbar"></partial>
 
 <div class="container">
-<div>
+    <div class="row">
+        <div class="col-md-6 ">
     <h4>FormReqDb</h4>
-    <hr />
+
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt >
             @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.RequestDate)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.Site)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.Site)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.Department)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.Department)
-        </dd>
-        <dt class = "col-sm-2">
+
+
+        <dt >
             @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
         </dd>
-        <dt class = "col-sm-2">
+        <dt >
             @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
         </dd>
-        <dt class = "col-sm-2">
+        <dt >
             @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FormReqDbs.SerialNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FormReqDbs.SerialNumber)
-        </dd>
-        <dt class = "col-sm-2">
+
+        <dt >
             @Html.DisplayNameFor(model => model.FormReqDbs.Supervisor)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.Supervisor)
         </dd>
-        <dt class = "col-sm-2">
+        <dt >
             @Html.DisplayNameFor(model => model.FormReqDbs.status)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.status)
         </dd>
     </dl>
+    </div>
+        <div class="col-md-6 ">
+            <h4>Equipment Details</h4>
+            <dl class="row">
+
+                <dt>Serial Number</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.SerialNumber)</dd>
+
+                <dt>Equipment Type</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentType)</dd>
+
+                <dt>Equipment name</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentName)</dd>
+
+                <dt>Problem Description</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.FormReqDbs.Department)</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Department)</dd>
+
+
+            </dl>
+        </div>
 </div>
 <div>
     <form asp-action="SubmitRegistry" method="post">

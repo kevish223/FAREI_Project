@@ -1,0 +1,47 @@
+﻿@using FAREI_Project.ViewModel
+@using FormRequest.Models
+@model RequestsViewModel
+<head>
+    <link rel="stylesheet" href="~/css/Admin.css" />
+    <link href="//cdn.datatables.net/2.3.2/css/dataTables.dat" />
+    <link href="//cdn.datatables.net/2.3.2/js/dataTables.min.js">
+</head>
+<partial name="Navbar"></partial>
+
+<div class="container">
+    <h1 class="mt-0">Equipment</h1>
+    <p>
+        <a asp-action="CreateEquipment">Create New</a>
+    </p>
+    <table class="table" id="userTable">
+        <thead>
+            <tr>
+                <th>Serial number</th>
+                <th>type</th>
+                <th>Name</th>
+                <th>Site</th>
+                <th>Department</th>
+                <th>User</th>
+                <th></th>
+            </tr>
+        </thead>
+        
+        <tbody>
+             @foreach (var item in Model.Inventories)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EquipmentType)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EquipmentName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Site)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Department)</td>
+                    <td>@Html.DisplayFor(modelItem => item.User)</td>
+                    <td>
+                        <a asp-action="EditEquipment" asp-route-id="@item.ID">Edit</a> ||
+                        <a asp-action="EquipmentDetails" asp-route-id="@item.ID">Details</a>                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -5,37 +5,106 @@
 </head>
 <partial name="Navbar"></partial>
 <div class="container">
-<div>
+    <div class="row">
+        <div class="col-md-4">
     <h4>Registry</h4>
-    <hr />
+ 
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt>
             @Html.DisplayNameFor(model => model.Registry.From)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.Registry.From)
         </dd>
      
-        <dt class = "col-sm-2">
+        <dt>
             @Html.DisplayNameFor(model => model.Registry.MovementDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.Registry.MovementDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt>
             @Html.DisplayNameFor(model => model.Registry.Remarks)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.Registry.Remarks)
         </dd>
-        <dt class = "col-sm-2">
+        <dt>
             @Html.DisplayNameFor(model => model.FormReqDbs.Department)
         </dt>
-        <dd class = "col-sm-10">
+        <dd >
             @Html.DisplayFor(model => model.FormReqDbs.Department)
         </dd>
     </dl>
+    </div>
+        <div class="col-md-4">
+            <h4>Request</h4>
+            <dl class="row">
+        <dt >
+            @Html.DisplayNameFor(model => model.FormReqDbs.RequestDate)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FormReqDbs.RequestDate)
+        </dd>
 
+
+        <dt >
+            @Html.DisplayNameFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FormReqDbs.ResponsibleOfficer)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.FormReqDbs.ContactPhone)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FormReqDbs.ContactPhone)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.FormReqDbs.ProblemDescription)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)
+        </dd>
+
+        <dt >
+            @Html.DisplayNameFor(model => model.FormReqDbs.Supervisor)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FormReqDbs.Supervisor)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.FormReqDbs.status)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FormReqDbs.status)
+        </dd>
+    </dl>
+    </div>
+        <div class="col-md-4 ">
+            <h4>Equipment Details</h4>
+            <dl class="row">
+
+                <dt>Serial Number</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.SerialNumber)</dd>
+
+                <dt>Equipment Type</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentType)</dd>
+
+                <dt>Equipment name</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Equipments.EquipmentName)</dd>
+
+                <dt>Problem Description</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.ProblemDescription)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.FormReqDbs.Department)</dt>
+                <dd>@Html.DisplayFor(model => model.FormReqDbs.Department)</dd>
+
+
+            </dl>
+        </div>
+    </div>
+    @if(Model.FormReqDbs.Pointer==20 || Model.FormReqDbs.Pointer==4){
     <form asp-action="Arrived" method="post">
 
             <input type="hidden" name="id" value="@Model.Registry.RegistryId" />
@@ -46,8 +115,8 @@
         </div>
             <input type="submit" value="Arrived" class="btn btn-secondary" />
         </form>
-  
-</div>
+    }
+
 <div>
     
     <a asp-action="Transite">Back to List</a>

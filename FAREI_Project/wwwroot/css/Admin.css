@@ -1,0 +1,51 @@
+﻿﻿.page-title {
+    color: #5E2B97;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Table Header */
+.B-table-header th {
+    background-color: #7F1F0E;
+    color: white;
+}
+
+/* Details Button */
+.btn-B {
+    background-color: #AC746C;
+    color: white;
+    border: none;
+}
+
+    .btn-B:hover {
+        background-color: #A58570;
+        color: black;
+    }
+
+
+.navbar {
+    background-color: #3B0A05 !important;
+}
+
+    .navbar a,
+    .navbar-brand {
+        color: white !important;
+    }
+
+        .navbar a:hover {
+            color: #A58570 !important;
+        }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f3e5f5;
+}
+
+
+body {
+    background-color: #DAC1B1 !important;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.R-textbox {
+    border: 2px solid #B0884C;
+}

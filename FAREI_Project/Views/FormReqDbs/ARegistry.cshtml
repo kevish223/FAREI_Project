@@ -1,0 +1,83 @@
+﻿@using FAREI_Project.ViewModel
+@model RequestsViewModel
+<head>
+    <link rel="stylesheet" href="~/css/Admin.css" />
+</head>
+<partial name="Navbar"></partial>
+<div class="container">
+    <h1>
+        Transit
+    </h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inventory.SerialNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inventory.EquipmentType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inventory.EquipmentName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Registry.From)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Registry.To)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Registry.MovementDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Registry.Remarks)
+                </th>
+
+                <th>
+                    Arrived
+                </th>
+
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Registries)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Equipment.SerialNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Equipment.EquipmentType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Equipment.EquipmentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.From)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.To)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MovementDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remarks)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsValid)
+                    </td>
+
+                    <td>
+
+                        <a asp-action="DetailsTransiteForm" asp-route-id="@item.RegistryId">Details</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -29,9 +29,9 @@
     </dl>
 </div>
 <div class="form-group">
-    
-    <form asp-action="ChangeStatus" method="post" >
-        <input type="hidden" name="id" value="@Model.FormReqDbs.Id" />
+        @if (Model.FormReqDbs.Pointer==0) {
+            <form asp-action="ChangeStatus" method="post" >
+                <input type="hidden" name="id" value="@Model.FormReqDbs.Id" />
         <input type="hidden"
                name="Accepted"
                value="Accepted" />
@@ -47,7 +47,7 @@
         </div>
         <input type="submit" value="submit" />
     </form>
-    
+    }
     
 </div>
 <a asp-action="SupervisorForm">Back to List</a>

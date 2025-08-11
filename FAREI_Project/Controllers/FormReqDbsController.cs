@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Win32;
 using MigraDoc.Rendering;
 using Mono.TextTemplating;
@@ -43,7 +44,7 @@ namespace FAREI_Project.Controllers
         private int atStartRepairing = 7;
         private int atFinalRequest = 8;
         private int atReturn = 9;
-
+        DateTime fiveDaysAgo = DateTime.Now.AddDays(-5);
 
 
         public FormReqDbsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
@@ -56,10 +57,13 @@ namespace FAREI_Project.Controllers
         
         public async Task<IActionResult> Index()
         {
+            
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Include(m=>m.ITTReports).ToListAsync(),
-                AllUsers = _userManager.Users.ToList()
+                AllUsers = _userManager.Users.ToList(),
+                Notification=await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+            m.ResponsibleOfficer == User.Identity.Name).ToListAsync()
             };
             var username = User.Identity.Name;
             if (username==null)
@@ -67,6 +71,7 @@ namespace FAREI_Project.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByEmailAsync(username);
+            var UserModel =await _context.Alluser.FirstOrDefaultAsync(m=>m.UserName==username);
             string? type = user.Type;
             if (type.Equals("Supervisor"))
             {
@@ -91,9 +96,13 @@ namespace FAREI_Project.Controllers
         }
         public async Task<IActionResult> MyRequestForm()
         {
+            
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Where(j=>j.ResponsibleOfficer.Equals(User.Identity.Name)).ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+                m.ResponsibleOfficer == User.Identity.Name).ToListAsync(),
+                
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -103,15 +112,47 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Where(j => j.Supervisor.Contains(User.Identity.Name) && j.status == "pending").ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 0 || m.Pointer == 4) && m.RequestDate >= fiveDaysAgo &&
+                m.Supervisor == User.Identity.Name).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
         }
         public async Task<IActionResult> ITOform()
         {
+            
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Include(m=>m.ITTReports).ToListAsync(),
+                Notification= await _context.FormReqDb.Where(m => (m.Pointer == 2 || m.Pointer == 3 || 
+                m.Pointer == 6 || m.Pointer == 8 || m.Pointer == 10) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> Inventory()
+        {
+
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Include(m => m.ITTReports).ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 2 || m.Pointer == 3 ||
+                m.Pointer == 6 || m.Pointer == 8 || m.Pointer == 10) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                Inventories = await _context.Equipment.ToListAsync(),
+                AllUsers = _userManager.Users.ToList()
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> ARegistry()
+        {
+
+            var model = new RequestsViewModel
+            {
+                FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Include(m => m.ITTReports).ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 2 || m.Pointer == 3 ||
+                m.Pointer == 6 || m.Pointer == 8 || m.Pointer == 10) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                Registries = await _context.Registries.ToListAsync(),
+                Inventories = await _context.Equipment.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -137,6 +178,7 @@ namespace FAREI_Project.Controllers
         public async Task<IActionResult> RegistryForm()
         {
             var username = User.Identity.Name;
+           
             if (username == null)
             {
                 return RedirectToAction("Index");
@@ -145,7 +187,10 @@ namespace FAREI_Project.Controllers
             var Site = user.Site;
             var model = new RequestsViewModel
             {
-                FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Where(j => (j.status.Contains("Transitting") || j.status.Contains("Send back") || j.status.Contains("Return")) && j.Site.Contains(Site) ).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Where(j => (j.status.Contains("Transitting") 
+                || j.status.Contains("Send back") || j.status.Contains("Return")) && j.Site.Contains(Site) ).ToListAsync(),
+                Notification= await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)            
+                && m.RequestDate >= fiveDaysAgo && m.Site == user.Site).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);
@@ -155,6 +200,8 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 5 || m.Pointer == 10 || m.Pointer == 4 
+                || m.Pointer == 7 || m.Pointer == 9 || m.Pointer == 20) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
                 Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
@@ -191,6 +238,8 @@ namespace FAREI_Project.Controllers
             var model = new RequestsViewModel
             {
                 FormReqDb = await _context.FormReqDb.Where(j => j.Supervisor == name).ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 0 || m.Pointer == 4) && m.RequestDate >= fiveDaysAgo &&
+                m.Supervisor == User.Identity.Name).ToListAsync(),
                 Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
@@ -209,7 +258,7 @@ namespace FAREI_Project.Controllers
         }
         public async Task<IActionResult> SReportForm()
         {
-            
+          
             var name = User.Identity.Name;
             if (name==null) 
             {
@@ -222,6 +271,9 @@ namespace FAREI_Project.Controllers
                 {
                     FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Where(j => j.ResponsibleOfficer==name).ToListAsync(),
                     Registries = await _context.Registries.ToListAsync(),
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+                    m.ResponsibleOfficer == user.UserName).ToListAsync(),
+                    User = user,
                     AllUsers = _userManager.Users.ToList()
                 };
                 return View(User);
@@ -230,25 +282,47 @@ namespace FAREI_Project.Controllers
                 var Supervisor = new RequestsViewModel
                 {
                     FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(j => j.Supervisor == name || j.ResponsibleOfficer==name).ToListAsync(),
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 0 || m.Pointer == 4) && m.RequestDate >= fiveDaysAgo &&
+                    m.Supervisor == User.Identity.Name).ToListAsync(),
                     Registries = await _context.Registries.ToListAsync(),
+                    User = user,
                     AllUsers = _userManager.Users.ToList()
                 };
                 return View(Supervisor);
-            }else if (user.Type== "Technician" || user.Type== "ITO" || user.Type == "Admin") 
+            }else if (user.Type== "Technician"  || user.Type == "Admin") 
             {
                 var model = new RequestsViewModel
                 {
                     FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).ToListAsync(),
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 5 || m.Pointer == 10 || m.Pointer == 4
+                    || m.Pointer == 7 || m.Pointer == 9 || m.Pointer == 20) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    User = user,
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(model);
+            }else if (user.Type == "ITO")
+            {
+                var model = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).ToListAsync(),
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 2 || m.Pointer == 3 ||
+                    m.Pointer == 6 || m.Pointer == 8 || m.Pointer == 10) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                    User = user,
                     Registries = await _context.Registries.ToListAsync(),
                     AllUsers = _userManager.Users.ToList()
                 };
                 return View(model);
-            } else if (user.Type== "Registry") 
+            }
+            else if (user.Type == "Registry")
             {
                 var Registry = new RequestsViewModel
                 {
-                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(m=>m.Site==user.Site).ToListAsync(),
-                    Registries = await _context.Registries.ToListAsync(),
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(m => m.Site == user.Site).ToListAsync(),
+                    Notification= await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)          
+                    && m.RequestDate >= fiveDaysAgo && m.Site == user.Site ).ToListAsync(),
+                    User=user,
+                    Registries = await _context.Registries.Include(m=>m.Equipment).Where(m=>m.From==user.Site || m.To==user.Site).ToListAsync(),
                     AllUsers = _userManager.Users.ToList()
                 };
                 return View(Registry);
@@ -258,18 +332,20 @@ namespace FAREI_Project.Controllers
         public async Task<IActionResult> Transite()
         {
             var username = User.Identity.Name;
+            
             if (username == null)
             {
                 return RedirectToAction("Index");
             }
             var user = await _userManager.FindByEmailAsync(username);
-            var request=_context.FormReqDb.ToArray();
-            int length =request.Length;
             var Site = user.Site;
             var model = new RequestsViewModel
             {
              
-                FormReqDb=await _context.FormReqDb.ToListAsync(),
+                FormReqDb= await _context.FormReqDb.Include(m => m.Equipments).Where(j => (j.status.Contains("Transitting") || j.status.Contains("Send back") || j.status.Contains("Return")) 
+                && j.Site.Contains(Site)).ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)
+                && m.RequestDate >= fiveDaysAgo && m.Site == user.Site).ToListAsync(),
                 Registries = await _context.Registries.Include(m=>m.Equipment).Where(j=>  j.From==Site || j.To==Site ).ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
@@ -277,6 +353,7 @@ namespace FAREI_Project.Controllers
         }
         public async Task<IActionResult> Feedback()
         {
+         
             var FormDBReq =  await _context.FormReqDb.Where(j => j.status == "Complete").ToListAsync();
             TimeSpan duration;
             for (int requests = 0; requests < FormDBReq.Count; requests++)
@@ -291,10 +368,12 @@ namespace FAREI_Project.Controllers
             }
 
 
-           var newFormDBReq = await _context.FormReqDb.Where(j => j.status == "Complete").ToListAsync();
+           var newFormDBReq = await _context.FormReqDb.Where(j => j.ResponsibleOfficer == User.Identity.Name).ToListAsync();
             var model = new RequestsViewModel
             {
                 FormReqDb = newFormDBReq,
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+                m.ResponsibleOfficer == User.Identity.Name).ToListAsync(),
                 Registries = await _context.Registries.ToListAsync(),
                 AllUsers = _userManager.Users.ToList()
             };
@@ -343,7 +422,7 @@ namespace FAREI_Project.Controllers
             }
         } 
         
-        /*
+        
         [HttpPost]
         public async Task<ActionResult> GeneratePdfDetailAsync(int ID)
         {
@@ -394,7 +473,7 @@ namespace FAREI_Project.Controllers
             p.SetMarginBottom(5);
             return p;
         }
-        */
+        
         // GET: FormReqDbs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -402,11 +481,14 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
-
-            var formReqDb = await _context.FormReqDb?.FirstOrDefaultAsync(m => m.Id == id);
+           
+            var formReqDb = await _context.FormReqDb?.Include(m=>m.Equipments).FirstOrDefaultAsync(m => m.Id == id);
             var allUsers = _context.Users.ToList();
             var viewModel = new RequestsViewModel
             {
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+                m.ResponsibleOfficer == User.Identity.Name).ToListAsync(),
+               
                 FormReqDbs = formReqDb,
                 AllUsers = allUsers
             };
@@ -417,6 +499,29 @@ namespace FAREI_Project.Controllers
 
             return View(viewModel);
         }
+        public async Task<IActionResult> EquipmentDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var Equipment = await _context.Equipment.FirstOrDefaultAsync(m => m.ID == id);
+            var allUsers = _context.Users.ToList();
+        
+            if (Equipment == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new RequestsViewModel
+            {
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+                m.ResponsibleOfficer == User.Identity.Name).ToListAsync(),
+                Equipment = Equipment,
+                AllUsers = allUsers
+            };
+            return View(viewModel);
+        }
 
         public async Task<IActionResult> ReportDetail(int? id)
         {
@@ -424,20 +529,84 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
+            
+            var formReqDb = await _context.FormReqDb?.Include(m => m.Equipments).FirstOrDefaultAsync(m => m.Id == id);
 
-            var formReqDb = await _context.FormReqDb?.Include(m=>m.Equipments).FirstOrDefaultAsync(m => m.Id == id);
             var allUsers = _context.Users.ToList();
-            var viewModel = new RequestsViewModel
-            {
-                FormReqDbs = formReqDb,
-                AllUsers = allUsers
-            };
             if (formReqDb == null)
             {
                 return NotFound();
             }
-
-            return View(viewModel);
+            var name = User.Identity.Name;
+            if (name == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = await _context.Alluser.FirstOrDefaultAsync(m => m.UserName == name);
+            if (user.Type == "User")
+            {
+                var User = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(j => j.ResponsibleOfficer == name).ToListAsync(),
+                    FormReqDbs = formReqDb,
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 20 || m.Pointer == 9) && m.RequestDate >= fiveDaysAgo &&
+                    m.ResponsibleOfficer == user.UserName).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(User);
+            }
+            else if (user.Type == "Supervisor")
+            {
+                var Supervisor = new RequestsViewModel
+                {
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 0 || m.Pointer == 4) && m.RequestDate >= fiveDaysAgo &&
+                    m.Supervisor == User.Identity.Name).ToListAsync(),
+                    FormReqDbs = formReqDb,
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(Supervisor);
+            }
+            else if (user.Type == "Technician" || user.Type == "Admin")
+            {
+                var model = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).ToListAsync(),
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 5 || m.Pointer == 10 || m.Pointer == 4                
+                    || m.Pointer == 7 || m.Pointer == 9 || m.Pointer == 20) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                    FormReqDbs = formReqDb,
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(model);
+            }
+            else if (user.Type == "ITO")
+            {
+                var model = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).ToListAsync(),
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 2 || m.Pointer == 3 ||
+                    m.Pointer == 6 || m.Pointer == 8 || m.Pointer == 10) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(model);
+            }
+            else if (user.Type == "Registry")
+            {
+                var Registry = new RequestsViewModel
+                {
+                    FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(m => m.Site == user.Site).ToListAsync(),
+                    FormReqDbs = formReqDb,
+                    Notification = await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)
+                    && m.RequestDate >= fiveDaysAgo && m.Site == user.Site).ToListAsync(),
+                    Registries = await _context.Registries.ToListAsync(),
+                    AllUsers = _userManager.Users.ToList()
+                };
+                return View(Registry);
+            }
+            return View();
         }
         public async Task<IActionResult> TechnicianDetailsForm(int? id)
         {
@@ -451,6 +620,9 @@ namespace FAREI_Project.Controllers
             var allUsers = _context.Users.ToList();
             var viewModel = new RequestsViewModel
             {
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 1 || m.Pointer == 5 || m.Pointer == 10 || m.Pointer == 4
+                || m.Pointer == 7 || m.Pointer == 9 || m.Pointer == 20) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
                 FormReqDbs = formReqDb,
                 AllUsers = allUsers,
                 Inventory = equipment   
@@ -474,6 +646,9 @@ namespace FAREI_Project.Controllers
             var AllUsers = _userManager.Users.ToList();
             var viewModel = new RequestsViewModel
             {
+                FormReqDb = await _context.FormReqDb.Where(j => j.Supervisor.Contains(User.Identity.Name) && j.status == "pending").ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 0 || m.Pointer == 4) && m.RequestDate >= fiveDaysAgo &&
+                m.Supervisor == User.Identity.Name).ToListAsync(),
                 FormReqDbs = formReqDb,
                 AllUsers = AllUsers
             };
@@ -490,13 +665,24 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
-
+          
+            var username = User.Identity.Name;
+            if (username == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = await _userManager.FindByEmailAsync(username);
+            var Site = user.Site;
             var formReqDb = await _context.FormReqDb
                 .FirstOrDefaultAsync(m => m.Id == id);
             var AllUsers = _userManager.Users.ToList();
             
             var viewModel = new RequestsViewModel
             {
+                FormReqDb = await _context.FormReqDb.Include(m => m.Equipments).Where(j => (j.status.Contains("Transitting")
+               || j.status.Contains("Send back") || j.status.Contains("Return")) && j.Site.Contains(Site)).ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)
+                && m.RequestDate >= fiveDaysAgo && m.Site == user.Site).ToListAsync(),
                 FormReqDbs = formReqDb,
                 Registry = new Registry(),
                 AllUsers = AllUsers
@@ -514,15 +700,25 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
+ 
             var Registry = await _context.Registries.FindAsync(id);
-            var formReqDb = await _context.FormReqDb
+            var formReqDb = await _context.FormReqDb.Include(m=>m.Equipments)
                .FirstOrDefaultAsync(m => m.Id == Registry.FormReqDbId);
-   
+            var username = User.Identity.Name;
+            if (username == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var user = await _userManager.FindByEmailAsync(username);
+            var Site = user.Site;
 
             var AllUsers = _userManager.Users.ToList();
 
             var viewModel = new RequestsViewModel
             {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)
+                && m.RequestDate >= fiveDaysAgo && m.Site == user.Site).ToListAsync(),
                 FormReqDbs = formReqDb,
                 Registry = Registry,
                 AllUsers = AllUsers
@@ -568,7 +764,7 @@ namespace FAREI_Project.Controllers
             {
                 return NotFound();
             }
-
+       
             var formReqDb = await _context.FormReqDb.FirstOrDefaultAsync(m => m.Id == id);
             var Registry = await _context.Registries.FirstOrDefaultAsync(m => m.FormReqDbId == id);
             var equipment = await _context.Equipment.FirstOrDefaultAsync(m => m.SerialNumber==formReqDb.SerialNumber);
@@ -577,6 +773,9 @@ namespace FAREI_Project.Controllers
 
             var viewModel = new RequestsViewModel
             {
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                Notification = await _context.FormReqDb.Where(m => (m.Pointer == 2 || m.Pointer == 3 ||
+                m.Pointer == 6 || m.Pointer == 8 || m.Pointer == 10) && m.RequestDate >= fiveDaysAgo).ToListAsync(),
                 FormReqDbs = formReqDb,
                 Registry = Registry,
                 AllUsers = AllUsers,
@@ -653,10 +852,11 @@ namespace FAREI_Project.Controllers
 
             var viewModel = new RequestsViewModel
             {
-                FormReqDbs = new FormReqDb(), 
+                FormReqDb = await _context.FormReqDb.ToListAsync(),
+                FormReqDbs = new FormReqDb(),
                 AllUsers = users,
-                User=FindUser
-               
+                User = FindUser
+
             };
             return View("Create",viewModel);
         }
@@ -732,8 +932,7 @@ namespace FAREI_Project.Controllers
             return View(viewModel);
         }
         // POST: FormReqDbs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateEquipment(RequestsViewModel model)
@@ -744,25 +943,22 @@ namespace FAREI_Project.Controllers
                 {
                     foreach (var error in state.Value.Errors)
                     {
-                        Console.WriteLine($"ModelState Error for {state.Key}: {error.ErrorMessage}");
+                        Console.WriteLine($"  {state.Key}: {error.ErrorMessage}");
                     }
                 }
             }
                 if (ModelState.IsValid)
             {
-                // Example: create new FormReqDb object to save
+              
                 var newForm = model.Inventory;
-
-                // Optionally set extra fields:
-               
 
                 _context.Equipment.Add(newForm);
                 _context.SaveChanges();
 
-                return RedirectToAction("CreateEquipment");
+                return RedirectToAction("Inventory");
             }
 
-            // If invalid → reload page and pass Users list again
+      
             model.AllUsers = _context.Users.ToList();
 
             return View(model);
@@ -864,6 +1060,51 @@ namespace FAREI_Project.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("UserForm");
         }
+        public async Task<IActionResult> EditEquipment(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var allUsers = _context.Users.ToList();
+            var equipment = await _context.Equipment.FirstOrDefaultAsync(m => m.ID == id);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new RequestsViewModel
+
+            {
+                AllUsers = allUsers,
+                Inventory= equipment
+            };
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditEquipment(RequestsViewModel model)
+        {
+            if (model.Inventory==null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(model.Inventory);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                
+                }
+                return RedirectToAction("Inventory");
+            }
+            return View(model);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FilterByDate(DateTime Date)
@@ -894,7 +1135,7 @@ namespace FAREI_Project.Controllers
             else if (Status == 2)
             {
                 formReqDb.status = "Rejected";
-                formReqDb.Pointer = 0;
+                formReqDb.Pointer = 20;
             }
             else if(Status == 3)
             {
@@ -979,11 +1220,12 @@ namespace FAREI_Project.Controllers
                 if (registry) {
                     formReqDb.status = "Send back";
                     formReqDb.remarks = Remarks;
-                    formReqDb.Pointer = 0;
+                    formReqDb.Pointer = 20;
                 }
                 else {
                     formReqDb.status = Status;
                     formReqDb.remarks = Remarks;
+                    formReqDb.Pointer = 20;
                 }
             } 
             else if (formReqDb.Pointer == atTransitRequest)
@@ -1046,14 +1288,14 @@ namespace FAREI_Project.Controllers
                 if (checkRegistry) 
                 {
                     request.status = "send back";
-                    request.Pointer = 0;
+                    request.Pointer = 20;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
                 else 
                 {
                     request.status = "rejected";
-                    request.Pointer = 0;
+                    request.Pointer = 20;
                     _context.SaveChanges();
                     return Json(new { success = true, newStatus = request.status });
                 }
@@ -1162,7 +1404,7 @@ namespace FAREI_Project.Controllers
             {
                 formReqDb.status = "Pending request";
                 formReqDb.remarks = Remarks;
-                Equipment.Remarks += " " + Remarks;
+               
             }
 
             try
@@ -1198,7 +1440,7 @@ namespace FAREI_Project.Controllers
                 return NotFound();
             }
 
-            if (formReqDb.Pointer == atNewRequest)
+            if (formReqDb.Pointer == 20)
                 {
                 formReqDb.status = "rejected";
                 Registry.Remarks += " 2. "+ Remarks;
