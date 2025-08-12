@@ -189,8 +189,10 @@ namespace FAREI_Project.Controllers
             {
                 FormReqDb = await _context.FormReqDb.Include(m=>m.Equipments).Where(j => (j.status.Contains("Transitting") 
                 || j.status.Contains("Send back") || j.status.Contains("Return")) && j.Site.Contains(Site) ).ToListAsync(),
+
                 Notification= await _context.FormReqDb.Where(m => (m.Pointer == 4 || m.Pointer == 20 || m.Pointer == 5)            
                 && m.RequestDate >= fiveDaysAgo && m.Site == user.Site).ToListAsync(),
+
                 AllUsers = _userManager.Users.ToList()
             };
             return View(model);

@@ -15,7 +15,6 @@ namespace FAREI_Project.ViewModel
         public FormReqDb? FormReqDbs { get; set; }
         public Registry? Registry{ get; set; }
         public EquipmentInventory? Inventory { get; set; }
-        public Third_Party? Third_Party { get; set; }
         public ITTreport? ITTreport { get; set; }
         public ApplicationUser? User { get; set; }
         public List<FormReqDb>? Notification {  get; set; }
