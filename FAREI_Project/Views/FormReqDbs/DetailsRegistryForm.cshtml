@@ -76,6 +76,7 @@
         </div>
 </div>
 <div>
+        @if (Model.FormReqDbs.Pointer == 19 || Model.FormReqDbs.Pointer == 4 || Model.FormReqDbs.Pointer == 9){
     <form asp-action="SubmitRegistry" method="post">
         <input asp-for="Registry.FormReqDbId" value="@Model.FormReqDbs.Id" type="hidden"/>
             <div>
@@ -91,10 +92,9 @@
             <label>Driver</label>
             <input asp-for="Registry.Driver" class="form-control" /> 
         </div>
-
-
 <button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
+    }
     <a asp-action="Index">Back to List</a>
 </div>
 @section Scripts {

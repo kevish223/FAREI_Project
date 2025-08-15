@@ -27,19 +27,6 @@
 
         <div class="col-md-3">
             <label >Site:</label>
-            @*
-                <select asp-for="FormReqDbs.Site" class="form-control" id="Site" required>
-                <option value="">-- Select site --</option>
-                <option> St Pierre </option>
-                <option> Reduit </option>
-                <option>Curepipe</option>
-                <option>Mapou</option>
-                <option>Flacq</option>
-                <option>riviere des anguilles</option>
-                <option>Plaisance</option>
-                <option>Vacoas</option>
-            </select>
-            *@
             <input asp-for="FormReqDbs.Site" class="form-control" id="Site" value="@Model.User.Site" style="background-color:lightgray" readonly/>
             </div>
         <div class="col-md-3">
@@ -57,9 +44,7 @@
         </div>
         }
         <input asp-for="FormReqDbs.status" type="hidden" value="pending"/>
-        <input asp-for="FormReqDbs.Pointer" type="hidden" value=0/>
-
-        
+        <input asp-for="FormReqDbs.Pointer" type="hidden" value=0/>  
     </div>
     <div class="form-group mb-4">
         <label asp-for="FormReqDbs.ContactPhone">Contact Phone:</label>
@@ -122,24 +107,17 @@
     }
 
 <script>
-
     const Type = document.getElementById("Type");
     const SerialNumber = document.getElementById("SerialNumber");
-
     let SiteVariable = null;
     let DepartmentVariable = null;
     let TypeVariable = null;
-
-
-
-
     Type.addEventListener('change', async function () {
         TypeVariable = Type.value;
         DepartmentVariable=document.getElementById("Dept").value;
         SiteVariable = document.getElementById("Site").value;
         await tryFetchData();
     });
-
     async function tryFetchData() {
         if (SiteVariable && DepartmentVariable && TypeVariable) {
             try {

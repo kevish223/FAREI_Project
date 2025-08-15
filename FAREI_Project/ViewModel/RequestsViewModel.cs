@@ -18,6 +18,7 @@ namespace FAREI_Project.ViewModel
         public ITTreport? ITTreport { get; set; }
         public ApplicationUser? User { get; set; }
         public List<FormReqDb>? Notification {  get; set; }
+        public List<Registry>? NotifRegistry { get; set; }
 
        
     }

@@ -9,56 +9,150 @@
 </head>
 <partial name="Navbar"></partial>
 <div class="container">
-    <h1>Details</h1>
-
-    <div>
-        <h4>FormReqDb</h4>
-        <hr />
+    <h1>Equipment Details</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+        
         <dl class="row">
-            <dt class="col-sm-2">
+            <dt >
                 @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
             </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Equipment.SerialNumber)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Equipment.SerialNumber)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Equipment.SerialNumber)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Equipment.SerialNumber)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
-            </dt>
-            <dd class="col-sm-10">
+            <dd >
                 @Html.DisplayFor(model => model.Equipment.SerialNumber)
             </dd>
 
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.EquipmentType)
             </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Equipment.SerialNumber)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Equipment.SerialNumber)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Equipment.SerialNumber)
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.EquipmentType)
             </dd>
 
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.EquipmentName)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.EquipmentName)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.Site)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.Site)
+            </dd>
+       
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.Department)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.Department)
+            </dd>
+
+              
+            <dt>
+                @Html.DisplayNameFor(model => model.Equipment.Status)                
+            </dt>            
+            <dd>            
+                @Html.DisplayFor(model => model.Equipment.Status)                
+            </dd>
+    </div>
+
+        <div class="col-md-4">
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.Drives)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.Drives)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.capacity)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.capacity)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.memory)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Equipment.memory)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.operatingSystem)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.operatingSystem)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.OSkey)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.OSkey)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.Office)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.Office)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.supplier)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.supplier)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.User)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.User)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.barcode)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.barcode)
+            </dd>
+        </div>
+
+        <div class="col-md-4">
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.DateOfPurchase)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.DateOfPurchase)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.amount)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.amount)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.warranty)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.warranty)
+            </dd>
+
+            <dt >
+                @Html.DisplayNameFor(model => model.Equipment.WarrantyExpire)
+            </dt>
+            <dd >
+                @Html.DisplayFor(model => model.Equipment.WarrantyExpire)
+            </dd>
+        </div>
         </dl>
     </div>
     <div>

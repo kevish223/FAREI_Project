@@ -8,7 +8,7 @@
 <h4>EquipmentInventory</h4>
 <hr />
 
-        <form asp-action="CreateEquipment">
+        <form asp-action="CreateEquipment" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row">
                     <div class="col-md-4 form-group">
@@ -16,6 +16,7 @@
                 <input asp-for="Inventory.EquipmentName" class="form-control" />
                 <span asp-validation-for="Inventory.EquipmentName" class="text-danger"></span>
             </div>
+          <input asp-for="Inventory.Status" type="hidden" value="In-use" />
                     <div class="col-md-4 form-group">
                 <label asp-for="Inventory.SerialNumber" class="control-label"></label>
                 <input asp-for="Inventory.SerialNumber" class="form-control" />

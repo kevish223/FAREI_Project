@@ -1,0 +1,57 @@
+﻿@using FAREI_Project.ViewModel
+@using FormRequest.Models
+@model RequestsViewModel
+<head>
+    <link rel="stylesheet" href="~/css/Admin.css" />
+    <link href="//cdn.datatables.net/2.3.2/css/dataTables.dat" />
+    <link href="//cdn.datatables.net/2.3.2/js/dataTables.min.js">
+</head>
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<partial name="Navbar"></partial>
+<div class="container">
+    <div style="display: flex; align-items: center; justify-content: flex-start;">
+        <h1>Request page- </h1>
+        <a asp-action="Create">Create New</a>
+    </div>
+    <div class="TableMargin">
+        <table class="table" id="userTable">
+            <thead>
+                <tr>
+                    <th>RequestDate</th>
+                    <th>Responsible Officer</th>
+
+                    <th>Serial number</th>
+                    <th>Equipment type</th>
+                    <th>remarks</th>
+                    <th>Problem Description</th>
+
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FormReqDb)
+                {
+                    var statusClass = StatusClass.GetStatusClass(item.status);
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ResponsibleOfficer)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Equipments.EquipmentType)
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.remarks)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ProblemDescription)</td>
+
+                        <td class="@statusClass status-cell" data-id="@item.Id">@Html.DisplayFor(modelItem => item.status)</td>
+                        <td><a asp-action="Details" asp-route-id="@item.Id">Details</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
